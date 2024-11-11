@@ -1,0 +1,9 @@
+node_modules/
+.env
+.terraform/
+*.tfstate
+*.tfstate.backup
+.DS_Store
+coverage/
+dist/
+.localstack
