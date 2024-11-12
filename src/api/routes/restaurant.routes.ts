@@ -1,12 +1,44 @@
-import { Router } from 'express';
-import { RestaurantController } from '../controllers/restaurant.controller';
+import express from 'express';
 import { auditMiddleware } from '../middleware/audit.middleware';
+import pool from '../../db/connection';
 
-const router = Router();
-const controller = new RestaurantController();
+const router = express.Router();
 
-router.get('/search', auditMiddleware, controller.searchRestaurants);
-router.get('/open', auditMiddleware, controller.getOpenRestaurants);
-router.get('/:id', auditMiddleware, controller.getRestaurantById);
+// Search restaurants by cuisine and kosher status
+router.get('/search', auditMiddleware, async (req, res) => {
+    const { cuisine, isKosher } = req.query;
+    try {
+        const query = `
+            SELECT * FROM restaurants 
+            WHERE ($1::text IS NULL OR cuisine_type = $1)
+            AND ($2::boolean IS NULL OR is_kosher = $2)
+        `;
+        const result = await pool.query(query, [cuisine, isKosher]);
+        res.json(result.rows);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
-export default router;
+// Get currently open restaurants
+router.get('/open', auditMiddleware, async (req, res) => {
+    try {
+        const currentTime = new Date();
+        // Fix: Get day of week as string
+        const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+        const dayOfWeek = days[currentTime.getDay()];
+        const timeNow = currentTime.toTimeString().slice(0, 5);
+
+        const query = `
+            SELECT * FROM restaurants 
+            WHERE opening_hours->$1->>'open' <= $2 
+            AND opening_hours->$1->>'close' >= $2
+        `;
+        const result = await pool.query(query, [dayOfWeek, timeNow]);
+        res.json(result.rows);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+export const restaurantRouter = router;

@@ -1,15 +1,19 @@
 import express from 'express';
-import restaurantRoutes from './routes/restaurant.routes';
-import adminRoutes from './routes/admin.routes';
+import { restaurantRouter } from './routes/restaurant.routes';
+import { adminRouter } from './routes/admin.routes';
 
 const app = express();
-const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
-app.use('/api/restaurants', restaurantRoutes);
-app.use('/api/admin', adminRoutes);
+// Routes
+app.use('/api/restaurants', restaurantRouter);
+app.use('/admin', adminRouter);
+
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+    console.log(`Server running at http://localhost:${port}`);
 });
+
+export default app;
