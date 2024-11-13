@@ -9,17 +9,23 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "types": [
+      "node",
+      "jest",
+      "express"
+    ],
     "typeRoots": [
       "./node_modules/@types",
       "./src/types"
-    ],
-    "types": ["node", "express"]
+    ]
   },
   "include": [
     "src/**/*",
     "src/types/**/*.d.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "dist"
   ]
 }

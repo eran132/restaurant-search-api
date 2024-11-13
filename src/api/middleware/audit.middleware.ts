@@ -1,3 +1,4 @@
+// src/api/middleware/audit.middleware.ts
 import { Request, Response, NextFunction } from 'express';
 import pool from '../../db/connection';
 
@@ -7,18 +8,14 @@ export const auditMiddleware = async (
     next: NextFunction
 ) => {
     try {
-        const { ip } = req;
-        const country = 'Unknown'; // You can integrate with a geolocation service
-        
         await pool.query(
             `INSERT INTO audit_logs (endpoint, method, query_params, ip_address, country)
              VALUES ($1, $2, $3, $4, $5)`,
-            [req.path, req.method, JSON.stringify(req.query), ip, country]
+            [req.path, req.method, JSON.stringify(req.query), req.ip, 'Unknown']
         );
-        
-        next();
     } catch (error) {
-        console.error('Error in audit middleware:', error);
-        next();
+        console.error('Audit log error:', error);
+    } finally {
+        next(); // Always continue to next middleware/route handler
     }
 };

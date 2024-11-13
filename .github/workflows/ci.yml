@@ -7,6 +7,20 @@ jobs:
     runs-on: ubuntu-latest
     
     services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: restaurants
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      
       localstack:
         image: localstack/localstack
         env:
@@ -27,3 +41,11 @@ jobs:
         
       - name: Run tests
         run: npm test
+        env:
+          DB_USER: user
+          DB_HOST: localhost
+          DB_NAME: restaurants
+          DB_PASSWORD: password
+          DB_PORT: 5432
+          JWT_SECRET: test-secret
+          ADMIN_PASSWORD: test-password

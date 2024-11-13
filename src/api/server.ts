@@ -1,8 +1,10 @@
 import express from 'express';
 import { restaurantRouter } from './routes/restaurant.routes';
 import { adminRouter } from './routes/admin.routes';
+import { Server } from 'http';
 
 const app = express();
+let server: Server | null = null;
 
 app.use(express.json());
 
@@ -46,10 +48,12 @@ app.use((req, res) => {
     res.status(404).json({ error: 'Not Found' });
 });
 
-const port = process.env.PORT || 3000;
+// Only start the server if we're not in test mode
+if (process.env.NODE_ENV !== 'test') {
+    const port = process.env.PORT || 3000;
+    server = app.listen(port, () => {
+        console.log(`Server running at http://localhost:${port}`);
+    });
+}
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
-
-export default app;
+export { app, server };
