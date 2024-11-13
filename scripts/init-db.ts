@@ -1,19 +1,47 @@
 import { Pool } from 'pg';
 import dotenv from 'dotenv';
+import { defaultConfig, testConfig } from '../src/db/connection';
 
 dotenv.config();
 
-const pool = new Pool({
-    user: process.env.DB_USER || 'user',
-    host: process.env.DB_HOST || 'localhost',
-    database: process.env.DB_NAME || 'restaurants',
-    password: process.env.DB_PASSWORD || 'password',
-    port: parseInt(process.env.DB_PORT || '5432'),
-});
+async function createDatabase(isTest = false) {
+    const config = isTest ? testConfig : defaultConfig;
+    const pool = new Pool({
+        ...config,
+        database: 'postgres' // Connect to default postgres database first
+    });
 
-async function initializeDatabase() {
     try {
-        // Create restaurants table with JSONB opening_hours
+        const dbName = isTest ? 'restaurants_test' : 'restaurants';
+        
+        // Check if database exists
+        const result = await pool.query(
+            "SELECT datname FROM pg_database WHERE datname = $1",
+            [dbName]
+        );
+
+        if (result.rows.length === 0) {
+            await pool.query(`CREATE DATABASE ${dbName}`);
+            console.log(`Created database: ${dbName}`);
+        } else {
+            console.log(`Database ${dbName} already exists, continuing with initialization`);
+        }
+    } catch (error) {
+        console.error('Error during database check/creation:', error);
+        throw error;
+    } finally {
+        await pool.end();
+    }
+}
+
+async function initializeDatabase(isTest = false) {
+    try {
+        await createDatabase(isTest);
+
+        const config = isTest ? testConfig : defaultConfig;
+        const pool = new Pool(config);
+
+        // Create tables
         await pool.query(`
             CREATE TABLE IF NOT EXISTS restaurants (
                 id SERIAL PRIMARY KEY,
@@ -27,12 +55,7 @@ async function initializeDatabase() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
-        `);
 
-        console.log('Created restaurants table');
-
-        // Create audit_logs table
-        await pool.query(`
             CREATE TABLE IF NOT EXISTS audit_logs (
                 id SERIAL PRIMARY KEY,
                 endpoint VARCHAR(255),
@@ -43,57 +66,58 @@ async function initializeDatabase() {
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         `);
+        console.log('Created tables');
 
-        console.log('Created audit_logs table');
-
-        // Insert sample data with proper opening hours format
-        await pool.query(`
-            INSERT INTO restaurants (
-                name, address, phone, website, 
-                opening_hours, cuisine_type, is_kosher
-            ) VALUES 
-            (
-                'Falafel King', 
-                'Tel Aviv, Dizengoff 123', 
-                '03-1234567', 
-                'www.falafelking.co.il',
-                '{"monday": {"open": "09:00", "close": "22:00"}, 
-                  "tuesday": {"open": "09:00", "close": "22:00"},
-                  "wednesday": {"open": "09:00", "close": "22:00"},
-                  "thursday": {"open": "09:00", "close": "22:00"},
-                  "friday": {"open": "09:00", "close": "15:00"},
-                  "saturday": {"open": "18:00", "close": "23:00"},
-                  "sunday": {"open": "09:00", "close": "22:00"}}',
-                'Middle Eastern',
-                true
-            ),
-            (
-                'Pizza Palace', 
-                'Jerusalem, Jaffa 45', 
-                '02-7654321', 
-                'www.pizzapalace.co.il',
-                '{"monday": {"open": "11:00", "close": "23:00"},
-                  "tuesday": {"open": "11:00", "close": "23:00"},
-                  "wednesday": {"open": "11:00", "close": "23:00"},
-                  "thursday": {"open": "11:00", "close": "23:00"},
-                  "friday": {"open": "11:00", "close": "14:00"},
-                  "saturday": {"open": "19:00", "close": "23:00"},
-                  "sunday": {"open": "11:00", "close": "23:00"}}',
-                'Italian',
-                false
-            )
-            ON CONFLICT DO NOTHING;
-        `);
-
-        console.log('Inserted sample data');
+        // Insert sample data only in development environment
+        if (!isTest) {
+            await pool.query(`
+                INSERT INTO restaurants (
+                    name, address, phone, website, 
+                    opening_hours, cuisine_type, is_kosher
+                ) VALUES 
+                (
+                    'Falafel King', 
+                    'Tel Aviv, Dizengoff 123', 
+                    '03-1234567', 
+                    'www.falafelking.co.il',
+                    '{"monday": {"open": "09:00", "close": "22:00"}, 
+                      "tuesday": {"open": "09:00", "close": "22:00"},
+                      "wednesday": {"open": "09:00", "close": "22:00"},
+                      "thursday": {"open": "09:00", "close": "22:00"},
+                      "friday": {"open": "15:00", "close": "22:00"},
+                      "saturday": {"open": "18:00", "close": "23:00"},
+                      "sunday": {"open": "09:00", "close": "22:00"}}',
+                    'Middle Eastern',
+                    true
+                ),
+                (
+                    'Pizza Palace', 
+                    'Jerusalem, Jaffa 45', 
+                    '02-7654321', 
+                    'www.pizzapalace.co.il',
+                    '{"monday": {"open": "11:00", "close": "23:00"},
+                      "tuesday": {"open": "11:00", "close": "23:00"},
+                      "wednesday": {"open": "11:00", "close": "23:00"},
+                      "thursday": {"open": "11:00", "close": "23:00"},
+                      "friday": {"open": "11:00", "close": "14:00"},
+                      "saturday": {"open": "19:00", "close": "23:00"},
+                      "sunday": {"open": "11:00", "close": "23:00"}}',
+                    'Italian',
+                    false
+                )
+                ON CONFLICT DO NOTHING;
+            `);
+            console.log('Inserted sample data');
+        }
 
         await pool.end();
-        console.log('Database initialization complete');
+        console.log(`Database initialization complete for ${isTest ? 'test' : 'development'} environment`);
     } catch (error) {
         console.error('Error during database initialization:', error);
-        await pool.end();
         process.exit(1);
     }
 }
 
-initializeDatabase();
+// Initialize based on NODE_ENV
+const isTestEnv = process.env.NODE_ENV === 'test';
+initializeDatabase(isTestEnv);

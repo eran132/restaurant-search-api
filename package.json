@@ -7,6 +7,7 @@
     "init-db": "ts-node scripts/init-db.ts",
     "setup": "./scripts/setup-dev.sh",
     "test": "NODE_ENV=test jest --detectOpenHandles --forceExit",
+    "test:setup": "NODE_ENV=test npx ts-node scripts/init-db.ts && npm test",
     "test:watch": "NODE_ENV=test jest --watch",
     "test:coverage": "NODE_ENV=test jest --coverage",
     "build": "tsc",
