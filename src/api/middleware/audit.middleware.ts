@@ -1,6 +1,5 @@
-// src/api/middleware/audit.middleware.ts
 import { Request, Response, NextFunction } from 'express';
-import pool from '../../db/connection';
+import { pool } from '../../db/connection';
 
 export const auditMiddleware = async (
     req: Request,
@@ -14,8 +13,10 @@ export const auditMiddleware = async (
             [req.path, req.method, JSON.stringify(req.query), req.ip, 'Unknown']
         );
     } catch (error) {
-        console.error('Audit log error:', error);
+        if (process.env.NODE_ENV !== 'test') {
+            console.error('Audit log error:', error);
+        }
     } finally {
-        next(); // Always continue to next middleware/route handler
+        next();
     }
 };

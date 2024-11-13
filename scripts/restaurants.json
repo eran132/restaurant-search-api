@@ -1,0 +1,855 @@
+{
+    "restaurants": [
+      {
+        "name": "Manta Ray",
+        "address": "Alma Beach, Tel Aviv-Yafo",
+        "phone": "03-517-4773",
+        "website": "www.mantaray.co.il",
+        "opening_hours": {
+          "sunday": { "open": "09:00", "close": "23:00" },
+          "monday": { "open": "09:00", "close": "23:00" },
+          "tuesday": { "open": "09:00", "close": "23:00" },
+          "wednesday": { "open": "09:00", "close": "23:00" },
+          "thursday": { "open": "09:00", "close": "23:00" },
+          "friday": { "open": "09:00", "close": "16:00" },
+          "saturday": { "open": "09:00", "close": "23:00" }
+        },
+        "cuisine_type": "Seafood",
+        "is_kosher": false
+      },
+      {
+        "name": "Machne Yehuda",
+        "address": "Beit Ya'akov 10, Jerusalem",
+        "phone": "02-533-3442",
+        "website": "www.machneyuda.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:30", "close": "23:00" },
+          "monday": { "open": "12:30", "close": "23:00" },
+          "tuesday": { "open": "12:30", "close": "23:00" },
+          "wednesday": { "open": "12:30", "close": "23:00" },
+          "thursday": { "open": "12:30", "close": "23:00" },
+          "friday": { "open": "11:30", "close": "15:00" },
+          "saturday": { "open": "19:00", "close": "23:00" }
+        },
+        "cuisine_type": "Modern Israeli",
+        "is_kosher": true
+      },
+      {
+        "name": "Tishreen",
+        "address": "HaPalmach St 10, Haifa",
+        "phone": "04-867-6060",
+        "website": "www.tishreen.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "23:00" },
+          "monday": { "open": "12:00", "close": "23:00" },
+          "tuesday": { "open": "12:00", "close": "23:00" },
+          "wednesday": { "open": "12:00", "close": "23:00" },
+          "thursday": { "open": "12:00", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "23:00" },
+          "saturday": { "open": "12:00", "close": "23:00" }
+        },
+        "cuisine_type": "Arabic",
+        "is_kosher": false
+      },
+      {
+        "name": "Blue Hall Music",
+        "address": "Herbert Samuel St 146, Tel Aviv-Yafo",
+        "phone": "03-902-5700",
+        "website": "www.bluehall.co.il",
+        "opening_hours": {
+          "sunday": { "open": "18:00", "close": "23:30" },
+          "monday": { "open": "18:00", "close": "23:30" },
+          "tuesday": { "open": "18:00", "close": "23:30" },
+          "wednesday": { "open": "18:00", "close": "23:30" },
+          "thursday": { "open": "18:00", "close": "23:30" },
+          "friday": { "open": "12:00", "close": "16:00" },
+          "saturday": { "open": "19:00", "close": "23:30" }
+        },
+        "cuisine_type": "Mediterranean",
+        "is_kosher": false
+      },
+      {
+        "name": "Eucalyptus",
+        "address": "Hativat Yerushalayim 14, Jerusalem",
+        "phone": "02-624-4331",
+        "website": "www.the-eucalyptus.com",
+        "opening_hours": {
+          "sunday": { "open": "18:00", "close": "23:00" },
+          "monday": { "open": "18:00", "close": "23:00" },
+          "tuesday": { "open": "18:00", "close": "23:00" },
+          "wednesday": { "open": "18:00", "close": "23:00" },
+          "thursday": { "open": "18:00", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "14:30" },
+          "saturday": { "open": "19:00", "close": "23:00" }
+        },
+        "cuisine_type": "Biblical",
+        "is_kosher": true
+      },
+      {
+        "name": "Pescado",
+        "address": "HaNamal St 96, Tel Aviv-Yafo",
+        "phone": "03-683-3338",
+        "website": "www.pescado.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "23:00" },
+          "monday": { "open": "12:00", "close": "23:00" },
+          "tuesday": { "open": "12:00", "close": "23:00" },
+          "wednesday": { "open": "12:00", "close": "23:00" },
+          "thursday": { "open": "12:00", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "15:00" },
+          "saturday": { "open": "19:00", "close": "23:00" }
+        },
+        "cuisine_type": "Fish",
+        "is_kosher": true
+      },
+      {
+        "name": "Chakra",
+        "address": "King George St 41, Jerusalem",
+        "phone": "02-625-2733",
+        "website": "www.chakra-rest.com",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "23:00" },
+          "monday": { "open": "12:00", "close": "23:00" },
+          "tuesday": { "open": "12:00", "close": "23:00" },
+          "wednesday": { "open": "12:00", "close": "23:00" },
+          "thursday": { "open": "12:00", "close": "23:00" },
+          "friday": { "open": "11:00", "close": "15:00" },
+          "saturday": { "open": "19:00", "close": "23:00" }
+        },
+        "cuisine_type": "New Israeli",
+        "is_kosher": false
+      },
+      {
+        "name": "Derech Hagefen",
+        "address": "Beit Zayit 28, Jerusalem",
+        "phone": "02-650-0506",
+        "website": "www.derechhagefen.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "22:00" },
+          "monday": { "open": "12:00", "close": "22:00" },
+          "tuesday": { "open": "12:00", "close": "22:00" },
+          "wednesday": { "open": "12:00", "close": "22:00" },
+          "thursday": { "open": "12:00", "close": "22:00" },
+          "friday": { "open": "11:00", "close": "14:00" },
+          "saturday": { "open": "19:00", "close": "22:00" }
+        },
+        "cuisine_type": "Mediterranean",
+        "is_kosher": true
+      },
+      {
+        "name": "Yan Restaurant",
+        "address": "Hanassi Ave 129, Haifa",
+        "phone": "04-834-5666",
+        "website": "www.yan-restaurant.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "23:00" },
+          "monday": { "open": "12:00", "close": "23:00" },
+          "tuesday": { "open": "12:00", "close": "23:00" },
+          "wednesday": { "open": "12:00", "close": "23:00" },
+          "thursday": { "open": "12:00", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "23:00" },
+          "saturday": { "open": "12:00", "close": "23:00" }
+        },
+        "cuisine_type": "Chinese",
+        "is_kosher": false
+      },
+      {
+        "name": "Mul Yam",
+        "address": "HaTachana Complex, Tel Aviv-Yafo",
+        "phone": "03-516-7788",
+        "website": "www.mulyam.com",
+        "opening_hours": {
+          "sunday": { "open": "12:30", "close": "23:00" },
+          "monday": { "open": "12:30", "close": "23:00" },
+          "tuesday": { "open": "12:30", "close": "23:00" },
+          "wednesday": { "open": "12:30", "close": "23:00" },
+          "thursday": { "open": "12:30", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "15:00" },
+          "saturday": { "open": "19:00", "close": "23:00" }
+        },
+        "cuisine_type": "Seafood",
+        "is_kosher": false
+      },
+      {
+        "name": "Magdalena",
+        "address": "Migdal HaEmek",
+        "phone": "04-662-0649",
+        "website": "www.magdalena.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "22:30" },
+          "monday": { "open": "12:00", "close": "22:30" },
+          "tuesday": { "open": "12:00", "close": "22:30" },
+          "wednesday": { "open": "12:00", "close": "22:30" },
+          "thursday": { "open": "12:00", "close": "22:30" },
+          "friday": { "open": "12:00", "close": "15:00" },
+          "saturday": { "open": "19:00", "close": "22:30" }
+        },
+        "cuisine_type": "Arab-Galilee",
+        "is_kosher": false
+      },
+      {
+        "name": "Thai House",
+        "address": "Bograshov St 8, Tel Aviv-Yafo",
+        "phone": "03-517-8568",
+        "website": "www.thaihouse.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "23:00" },
+          "monday": { "open": "12:00", "close": "23:00" },
+          "tuesday": { "open": "12:00", "close": "23:00" },
+          "wednesday": { "open": "12:00", "close": "23:00" },
+          "thursday": { "open": "12:00", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "16:00" },
+          "saturday": { "open": "18:00", "close": "23:00" }
+        },
+        "cuisine_type": "Thai",
+        "is_kosher": false
+      },
+      {
+        "name": "Mamilla Rooftop",
+        "address": "Shlomo ha-Melekh St 11, Jerusalem",
+        "phone": "02-548-2230",
+        "website": "www.mamillahotel.com/dining",
+        "opening_hours": {
+          "sunday": { "open": "12:30", "close": "23:00" },
+          "monday": { "open": "12:30", "close": "23:00" },
+          "tuesday": { "open": "12:30", "close": "23:00" },
+          "wednesday": { "open": "12:30", "close": "23:00" },
+          "thursday": { "open": "12:30", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "14:30" },
+          "saturday": { "open": "20:00", "close": "23:00" }
+        },
+        "cuisine_type": "Mediterranean",
+        "is_kosher": true
+      },
+      {
+        "name": "Dallal",
+        "address": "Shabazi St 10, Tel Aviv-Yafo",
+        "phone": "03-510-9292",
+        "website": "www.dallal.co.il",
+        "opening_hours": {
+          "sunday": { "open": "09:00", "close": "23:00" },
+          "monday": { "open": "09:00", "close": "23:00" },
+          "tuesday": { "open": "09:00", "close": "23:00" },
+          "wednesday": { "open": "09:00", "close": "23:00" },
+          "thursday": { "open": "09:00", "close": "23:00" },
+          "friday": { "open": "09:00", "close": "16:00" },
+          "saturday": { "open": "09:00", "close": "23:00" }
+        },
+        "cuisine_type": "French",
+        "is_kosher": false
+      },
+      {
+        "name": "Kampai",
+        "address": "Frishman St 40, Tel Aviv-Yafo",
+        "phone": "03-624-3458",
+        "website": "www.kampai.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "23:30" },
+          "monday": { "open": "12:00", "close": "23:30" },
+          "tuesday": { "open": "12:00", "close": "23:30" },
+          "wednesday": { "open": "12:00", "close": "23:30" },
+          "thursday": { "open": "12:00", "close": "23:30" },
+          "friday": { "open": "12:00", "close": "15:30" },
+          "saturday": { "open": "18:00", "close": "23:30" }
+        },
+        "cuisine_type": "Japanese",
+        "is_kosher": false
+      },
+      {
+        "name": "1868",
+        "address": "King David St 10, Jerusalem",
+        "phone": "02-622-2312",
+        "website": "www.1868.co.il",
+        "opening_hours": {
+          "sunday": { "open": "18:00", "close": "23:00" },
+          "monday": { "open": "18:00", "close": "23:00" },
+          "tuesday": { "open": "18:00", "close": "23:00" },
+          "wednesday": { "open": "18:00", "close": "23:00" },
+          "thursday": { "open": "18:00", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "14:30" },
+          "saturday": { "open": "19:30", "close": "23:00" }
+        },
+        "cuisine_type": "Fine Dining",
+        "is_kosher": true
+      },
+      {
+        "name": "El Gaucho",
+        "address": "Dizengoff St 84, Tel Aviv-Yafo",
+        "phone": "03-608-8888",
+        "website": "www.elgaucho.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "23:30" },
+          "monday": { "open": "12:00", "close": "23:30" },
+          "tuesday": { "open": "12:00", "close": "23:30" },
+          "wednesday": { "open": "12:00", "close": "23:30" },
+          "thursday": { "open": "12:00", "close": "23:30" },
+          "friday": { "open": "12:00", "close": "15:00" },
+          "saturday": { "open": "20:00", "close": "23:30" }
+        },
+        "cuisine_type": "Steakhouse",
+        "is_kosher": true
+      },
+      {
+        "name": "Uri Buri",
+        "address": "Ha-Hagana St 63, Acre",
+        "phone": "04-955-2212",
+        "website": "www.uriburi.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "23:00" },
+          "monday": { "open": "12:00", "close": "23:00" },
+          "tuesday": { "open": "12:00", "close": "23:00" },
+          "wednesday": { "open": "12:00", "close": "23:00" },
+          "thursday": { "open": "12:00", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "23:00" },
+          "saturday": { "open": "12:00", "close": "23:00" }
+        },
+        "cuisine_type": "Seafood",
+        "is_kosher": false
+      },
+      {
+        "name": "Tandoori",
+        "address": "Zamenhoff St 2, Tel Aviv-Yafo",
+        "phone": "03-629-6185",
+        "website": "www.tandoori.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "23:00" },
+          "monday": { "open": "12:00", "close": "23:00" },
+          "tuesday": { "open": "12:00", "close": "23:00" },
+          "wednesday": { "open": "12:00", "close": "23:00" },
+          "thursday": { "open": "12:00", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "15:30" },
+          "saturday": { "open": "19:00", "close": "23:00" }
+        },
+        "cuisine_type": "Indian",
+        "is_kosher": true
+      },
+      {
+        "name": "Primitivo",
+        "address": "Sderot Ben Gurion 15, Haifa",
+        "phone": "04-852-4355",
+        "website": "www.primitivo.co.il",
+        "opening_hours": {
+          "sunday": { "open": "17:00", "close": "23:00" },
+          "monday": { "open": "17:00", "close": "23:00" },
+          "tuesday": { "open": "17:00", "close": "23:00" },
+          "wednesday": { "open": "17:00", "close": "23:00" },
+          "thursday": { "open": "17:00", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "23:00" },
+          "saturday": { "open": "17:00", "close": "23:00" }
+        },
+        "cuisine_type": "Italian",
+        "is_kosher": false
+      },
+      {
+        "name": "Herbert Samuel",
+        "address": "Kaufmann St 6, Tel Aviv-Yafo",
+        "phone": "03-516-6516",
+        "website": "www.herbertsamuel.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:30", "close": "23:00" },
+          "monday": { "open": "12:30", "close": "23:00" },
+          "tuesday": { "open": "12:30", "close": "23:00" },
+          "wednesday": { "open": "12:30", "close": "23:00" },
+          "thursday": { "open": "12:30", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "15:00" },
+          "saturday": { "open": "19:00", "close": "23:00" }
+        },
+        "cuisine_type": "Fine Dining",
+        "is_kosher": false
+      },
+      {
+        "name": "Diana",
+        "address": "Ahad Ha'Am St 14, Nazareth",
+        "phone": "04-656-5613",
+        "website": "www.diana-restaurant.com",
+        "opening_hours": {
+          "sunday": { "open": "11:00", "close": "22:00" },
+          "monday": { "open": "11:00", "close": "22:00" },
+          "tuesday": { "open": "11:00", "close": "22:00" },
+          "wednesday": { "open": "11:00", "close": "22:00" },
+          "thursday": { "open": "11:00", "close": "22:00" },
+          "friday": { "open": "11:00", "close": "22:00" },
+          "saturday": { "open": "11:00", "close": "22:00" }
+        },
+        "cuisine_type": "Arab",
+        "is_kosher": false
+      },
+      {
+        "name": "Lumina by Meir Adoni",
+        "address": "Herzl Rosenblum St 4, Tel Aviv-Yafo",
+        "phone": "03-375-7775",
+        "website": "www.lumina.co.il",
+        "opening_hours": {
+          "sunday": { "open": "18:00", "close": "23:00" },
+          "monday": { "open": "18:00", "close": "23:00" },
+          "tuesday": { "open": "18:00", "close": "23:00" },
+          "wednesday": { "open": "18:00", "close": "23:00" },
+          "thursday": { "open": "18:00", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "15:00" },
+          "saturday": { "open": "19:00", "close": "23:00" }
+        },
+        "cuisine_type": "Modern Kosher",
+        "is_kosher": true
+      },
+      {
+        "name": "Decks",
+        "address": "Royal Beach Promenade, Eilat",
+        "phone": "08-636-3777",
+        "website": "www.decks.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "23:00" },
+          "monday": { "open": "12:00", "close": "23:00" },
+          "tuesday": { "open": "12:00", "close": "23:00" },
+          "wednesday": { "open": "12:00", "close": "23:00" },
+          "thursday": { "open": "12:00", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "15:00" },
+          "saturday": { "open": "20:00", "close": "23:00" }
+        },
+        "cuisine_type": "Meat",
+        "is_kosher": true
+      },
+      {
+        "name": "Pastel",
+        "address": "Sha'ul HaMelech Blvd 27, Tel Aviv-Yafo",
+        "phone": "03-644-7441",
+        "website": "www.pastel-tlv.com",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "23:30" },
+          "monday": { "open": "12:00", "close": "23:30" },
+          "tuesday": { "open": "12:00", "close": "23:30" },
+          "wednesday": { "open": "12:00", "close": "23:30" },
+          "thursday": { "open": "12:00", "close": "23:30" },
+          "friday": { "open": "12:00", "close": "16:00" },
+          "saturday": { "open": "18:30", "close": "23:30" }
+        },
+        "cuisine_type": "Brasserie",
+        "is_kosher": false
+      },
+      {
+        "name": "Zion HaGadol",
+        "address": "King George St 89, Beer Sheva",
+        "phone": "08-627-5599",
+        "website": "www.zion-hagadol.co.il",
+        "opening_hours": {
+          "sunday": { "open": "11:00", "close": "23:00" },
+          "monday": { "open": "11:00", "close": "23:00" },
+          "tuesday": { "open": "11:00", "close": "23:00" },
+          "wednesday": { "open": "11:00", "close": "23:00" },
+          "thursday": { "open": "11:00", "close": "23:00" },
+          "friday": { "open": "11:00", "close": "15:00" },
+          "saturday": { "open": "19:00", "close": "23:00" }
+        },
+        "cuisine_type": "Middle Eastern",
+        "is_kosher": true
+      },
+      {
+        "name": "Japanika",
+        "address": "Rothschild Blvd 65, Rishon LeZion",
+        "phone": "03-964-6666",
+        "website": "www.japanika.net",
+        "opening_hours": {
+          "sunday": { "open": "11:00", "close": "23:00" },
+          "monday": { "open": "11:00", "close": "23:00" },
+          "tuesday": { "open": "11:00", "close": "23:00" },
+          "wednesday": { "open": "11:00", "close": "23:00" },
+          "thursday": { "open": "11:00", "close": "23:00" },
+          "friday": { "open": "11:00", "close": "15:00" },
+          "saturday": { "open": "19:00", "close": "23:00" }
+        },
+        "cuisine_type": "Japanese",
+        "is_kosher": true
+      },
+      {
+        "name": "Chloelys",
+        "address": "HaArba'a St 4, Tel Aviv-Yafo",
+        "phone": "03-638-0500",
+        "website": "www.chloelys.com",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "23:00" },
+          "monday": { "open": "12:00", "close": "23:00" },
+          "tuesday": { "open": "12:00", "close": "23:00" },
+          "wednesday": { "open": "12:00", "close": "23:00" },
+          "thursday": { "open": "12:00", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "15:00" },
+          "saturday": { "open": "20:00", "close": "23:00" }
+        },
+        "cuisine_type": "French",
+        "is_kosher": false
+      },
+      {
+        "name": "Nagila",
+        "address": "Mashiah Baruchof 5, Jerusalem",
+        "phone": "02-622-3283",
+        "website": "www.nagila.co.il",
+        "opening_hours": {
+          "sunday": { "open": "11:00", "close": "22:00" },
+          "monday": { "open": "11:00", "close": "22:00" },
+          "tuesday": { "open": "11:00", "close": "22:00" },
+          "wednesday": { "open": "11:00", "close": "22:00" },
+          "thursday": { "open": "11:00", "close": "22:00" },
+          "friday": { "open": "09:00", "close": "14:00" },
+          "saturday": { "open": "19:00", "close": "22:00" }
+        },
+        "cuisine_type": "Vegetarian",
+        "is_kosher": true
+      },
+      {
+        "name": "Raphael",
+        "address": "HaYarkon St 87, Tel Aviv-Yafo",
+        "phone": "03-522-6464",
+        "website": "www.raphaeltlv.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:30", "close": "23:30" },
+          "monday": { "open": "12:30", "close": "23:30" },
+          "tuesday": { "open": "12:30", "close": "23:30" },
+          "wednesday": { "open": "12:30", "close": "23:30" },
+          "thursday": { "open": "12:30", "close": "23:30" },
+          "friday": { "open": "12:00", "close": "15:00" },
+          "saturday": { "open": "19:00", "close": "23:30" }
+        },
+        "cuisine_type": "Mediterranean",
+        "is_kosher": false
+      },
+      {
+        "name": "Messa",
+        "address": "HaArba'a St 19, Tel Aviv-Yafo",
+        "phone": "03-685-6859",
+        "website": "www.messa.co.il",
+        "opening_hours": {
+          "sunday": { "open": "19:00", "close": "23:30" },
+          "monday": { "open": "19:00", "close": "23:30" },
+          "tuesday": { "open": "19:00", "close": "23:30" },
+          "wednesday": { "open": "19:00", "close": "23:30" },
+          "thursday": { "open": "19:00", "close": "23:30" },
+          "friday": { "open": "19:00", "close": "23:30" },
+          "saturday": { "open": "19:00", "close": "23:30" }
+        },
+        "cuisine_type": "Contemporary",
+        "is_kosher": false
+      },
+      {
+        "name": "Sushi Rehavia",
+        "address": "Azza St 31, Jerusalem",
+        "phone": "02-567-8889",
+        "website": "www.sushirehavia.co.il",
+        "opening_hours": {
+          "sunday": { "open": "11:00", "close": "23:00" },
+          "monday": { "open": "11:00", "close": "23:00" },
+          "tuesday": { "open": "11:00", "close": "23:00" },
+          "wednesday": { "open": "11:00", "close": "23:00" },
+          "thursday": { "open": "11:00", "close": "23:00" },
+          "friday": { "open": "11:00", "close": "14:00" },
+          "saturday": { "open": "20:00", "close": "23:00" }
+        },
+        "cuisine_type": "Japanese",
+        "is_kosher": true
+      },
+      {
+        "name": "Onza",
+        "address": "Rabbi Hanina St 3, Tel Aviv-Yafo",
+        "phone": "03-648-6060",
+        "website": "www.onza.co.il",
+        "opening_hours": {
+          "sunday": { "open": "18:00", "close": "23:00" },
+          "monday": { "open": "18:00", "close": "23:00" },
+          "tuesday": { "open": "18:00", "close": "23:00" },
+          "wednesday": { "open": "18:00", "close": "23:00" },
+          "thursday": { "open": "18:00", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "16:00" },
+          "saturday": { "open": "18:00", "close": "23:00" }
+        },
+        "cuisine_type": "Turkish",
+        "is_kosher": false
+      },
+      {
+        "name": "Rooftop",
+        "address": "Daniel Hotel, Herzliya Pituach",
+        "phone": "09-952-4777",
+        "website": "www.rooftop-tlv.com",
+        "opening_hours": {
+          "sunday": { "open": "18:30", "close": "23:00" },
+          "monday": { "open": "18:30", "close": "23:00" },
+          "tuesday": { "open": "18:30", "close": "23:00" },
+          "wednesday": { "open": "18:30", "close": "23:00" },
+          "thursday": { "open": "18:30", "close": "23:00" },
+          "friday": { "open": "12:30", "close": "15:30" },
+          "saturday": { "open": "18:30", "close": "23:00" }
+        },
+        "cuisine_type": "Asian Fusion",
+        "is_kosher": true
+      },
+      {
+        "name": "Rama's Kitchen",
+        "address": "Nataf",
+        "phone": "02-579-7920",
+        "website": "www.ramaskitchen.co.il",
+        "opening_hours": {
+          "sunday": { "open": "09:00", "close": "16:00" },
+          "monday": { "open": "09:00", "close": "16:00" },
+          "tuesday": { "open": "09:00", "close": "16:00" },
+          "wednesday": { "open": "09:00", "close": "16:00" },
+          "thursday": { "open": "09:00", "close": "16:00" },
+          "friday": { "open": "09:00", "close": "15:00" },
+          "saturday": { "open": "09:00", "close": "16:00" }
+        },
+        "cuisine_type": "Mediterranean",
+        "is_kosher": false
+      },
+      {
+        "name": "Hamotzi",
+        "address": "Beit Ya'akov St 4, Jerusalem",
+        "phone": "02-631-0050",
+        "website": "www.hamotzi.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "23:00" },
+          "monday": { "open": "12:00", "close": "23:00" },
+          "tuesday": { "open": "12:00", "close": "23:00" },
+          "wednesday": { "open": "12:00", "close": "23:00" },
+          "thursday": { "open": "12:00", "close": "23:00" },
+          "friday": { "open": "11:00", "close": "14:00" },
+          "saturday": { "open": "20:00", "close": "23:00" }
+        },
+        "cuisine_type": "Moroccan",
+        "is_kosher": true
+      },
+      {
+        "name": "Greco",
+        "address": "Rothschild Blvd 25, Tel Aviv-Yafo",
+        "phone": "03-791-1111",
+        "website": "www.greco.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "23:00" },
+          "monday": { "open": "12:00", "close": "23:00" },
+          "tuesday": { "open": "12:00", "close": "23:00" },
+          "wednesday": { "open": "12:00", "close": "23:00" },
+          "thursday": { "open": "12:00", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "16:00" },
+          "saturday": { "open": "18:00", "close": "23:00" }
+        },
+        "cuisine_type": "Greek",
+        "is_kosher": false
+      },
+      {
+        "name": "Hanamal 24",
+        "address": "Hanamal St 24, Haifa",
+        "phone": "04-862-8899",
+        "website": "www.hanamal24.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "23:00" },
+          "monday": { "open": "12:00", "close": "23:00" },
+          "tuesday": { "open": "12:00", "close": "23:00" },
+          "wednesday": { "open": "12:00", "close": "23:00" },
+          "thursday": { "open": "12:00", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "15:00" },
+          "saturday": { "open": "19:00", "close": "23:00" }
+        },
+        "cuisine_type": "Fine Dining",
+        "is_kosher": false
+      },
+      {
+        "name": "Shipudei Hatikva",
+        "address": "Hatikva St 15, Tel Aviv-Yafo",
+        "phone": "03-687-0000",
+        "website": "www.shipudei-hatikva.co.il",
+        "opening_hours": {
+          "sunday": { "open": "11:00", "close": "23:00" },
+          "monday": { "open": "11:00", "close": "23:00" },
+          "tuesday": { "open": "11:00", "close": "23:00" },
+          "wednesday": { "open": "11:00", "close": "23:00" },
+          "thursday": { "open": "11:00", "close": "23:00" },
+          "friday": { "open": "11:00", "close": "15:00" },
+          "saturday": { "open": "19:00", "close": "23:00" }
+        },
+        "cuisine_type": "Middle Eastern",
+        "is_kosher": true
+      },
+      {
+        "name": "Quattro",
+        "address": "Rabbi Akiva St 4, Tel Aviv-Yafo",
+        "phone": "03-944-4444",
+        "website": "www.quattro.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "23:00" },
+          "monday": { "open": "12:00", "close": "23:00" },
+          "tuesday": { "open": "12:00", "close": "23:00" },
+          "wednesday": { "open": "12:00", "close": "23:00" },
+          "thursday": { "open": "12:00", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "15:00" },
+          "saturday": { "open": "20:00", "close": "23:00" }
+        },
+        "cuisine_type": "Italian",
+        "is_kosher": true
+      },
+      {
+        "name": "West Side",
+        "address": "King David St 23, Jerusalem",
+        "phone": "02-502-2213",
+        "website": "www.westside.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "23:00" },
+          "monday": { "open": "12:00", "close": "23:00" },
+          "tuesday": { "open": "12:00", "close": "23:00" },
+          "wednesday": { "open": "12:00", "close": "23:00" },
+          "thursday": { "open": "12:00", "close": "23:00" },
+          "friday": { "open": "11:00", "close": "14:00" },
+          "saturday": { "open": "20:00", "close": "23:00" }
+        },
+        "cuisine_type": "American",
+        "is_kosher": true
+      },
+      {
+        "name": "Mansura",
+        "address": "Hayam St 1, Acre",
+        "phone": "04-991-0065",
+        "website": "www.mansura.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "22:00" },
+          "monday": { "open": "12:00", "close": "22:00" },
+          "tuesday": { "open": "12:00", "close": "22:00" },
+          "wednesday": { "open": "12:00", "close": "22:00" },
+          "thursday": { "open": "12:00", "close": "22:00" },
+          "friday": { "open": "12:00", "close": "22:00" },
+          "saturday": { "open": "12:00", "close": "22:00" }
+        },
+        "cuisine_type": "Arab-Seafood",
+        "is_kosher": false
+      },
+      {
+        "name": "Gazpacho",
+        "address": "Ha-Sadna St 4, Ashkelon",
+        "phone": "08-674-1111",
+        "website": "www.gazpacho.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "23:00" },
+          "monday": { "open": "12:00", "close": "23:00" },
+          "tuesday": { "open": "12:00", "close": "23:00" },
+          "wednesday": { "open": "12:00", "close": "23:00" },
+          "thursday": { "open": "12:00", "close": "23:00" },
+          "friday": { "open": "11:00", "close": "15:00" },
+          "saturday": { "open": "20:00", "close": "23:00" }
+        },
+        "cuisine_type": "Spanish",
+        "is_kosher": true
+      },
+      {
+        "name": "Bandura",
+        "address": "Sderot Yerushalayim 10, Ashdod",
+        "phone": "08-852-2333",
+        "website": "www.bandura.co.il",
+        "opening_hours": {
+          "sunday": { "open": "11:00", "close": "23:00" },
+          "monday": { "open": "11:00", "close": "23:00" },
+          "tuesday": { "open": "11:00", "close": "23:00" },
+          "wednesday": { "open": "11:00", "close": "23:00" },
+          "thursday": { "open": "11:00", "close": "23:00" },
+          "friday": { "open": "11:00", "close": "15:00" },
+          "saturday": { "open": "20:00", "close": "23:00" }
+        },
+        "cuisine_type": "Middle Eastern",
+        "is_kosher": true
+      },
+      {
+        "name": "Pomo",
+        "address": "Rothschild Blvd 8, Tel Aviv-Yafo",
+        "phone": "03-920-1111",
+        "website": "www.pomo.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "00:00" },
+          "monday": { "open": "12:00", "close": "00:00" },
+          "tuesday": { "open": "12:00", "close": "00:00" },
+          "wednesday": { "open": "12:00", "close": "00:00" },
+          "thursday": { "open": "12:00", "close": "00:00" },
+          "friday": { "open": "12:00", "close": "16:00" },
+          "saturday": { "open": "19:00", "close": "00:00" }
+        },
+        "cuisine_type": "Italian",
+        "is_kosher": false
+      },
+      {
+        "name": "Makom Shel Basar",
+        "address": "WeWork ToHA, Tel Aviv-Yafo",
+        "phone": "03-644-4345",
+        "website": "www.makomshelbasar.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "23:00" },
+          "monday": { "open": "12:00", "close": "23:00" },
+          "tuesday": { "open": "12:00", "close": "23:00" },
+          "wednesday": { "open": "12:00", "close": "23:00" },
+          "thursday": { "open": "12:00", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "15:00" },
+          "saturday": { "open": "20:00", "close": "23:00" }
+        },
+        "cuisine_type": "Steakhouse",
+        "is_kosher": true
+      },
+      {
+        "name": "Ha'achim",
+        "address": "Ibn Gabirol St 12, Tel Aviv-Yafo",
+        "phone": "03-691-7171",
+        "website": "www.haachim.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "23:30" },
+          "monday": { "open": "12:00", "close": "23:30" },
+          "tuesday": { "open": "12:00", "close": "23:30" },
+          "wednesday": { "open": "12:00", "close": "23:30" },
+          "thursday": { "open": "12:00", "close": "23:30" },
+          "friday": { "open": "12:00", "close": "16:00" },
+          "saturday": { "open": "19:00", "close": "23:30" }
+        },
+        "cuisine_type": "Israeli",
+        "is_kosher": false
+      },
+      {
+        "name": "Douzan",
+        "address": "Ein Sara Rd 21, Nahariya",
+        "phone": "04-951-3333",
+        "website": "www.douzan.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "22:00" },
+          "monday": { "open": "12:00", "close": "22:00" },
+          "tuesday": { "open": "12:00", "close": "22:00" },
+          "wednesday": { "open": "12:00", "close": "22:00" },
+          "thursday": { "open": "12:00", "close": "22:00" },
+          "friday": { "open": "12:00", "close": "22:00" },
+          "saturday": { "open": "12:00", "close": "22:00" }
+        },
+        "cuisine_type": "Lebanese",
+        "is_kosher": false
+      },
+      {
+        "name": "Roza",
+        "address": "Hashmal St 3, Tel Aviv-Yafo",
+        "phone": "03-516-6660",
+        "website": "www.roza.co.il",
+        "opening_hours": {
+          "sunday": { "open": "18:00", "close": "23:00" },
+          "monday": { "open": "18:00", "close": "23:00" },
+          "tuesday": { "open": "18:00", "close": "23:00" },
+          "wednesday": { "open": "18:00", "close": "23:00" },
+          "thursday": { "open": "18:00", "close": "23:00" },
+          "friday": { "open": "12:00", "close": "16:00" },
+          "saturday": { "open": "18:00", "close": "23:00" }
+        },
+        "cuisine_type": "Georgian",
+        "is_kosher": false
+      },
+      {
+        "name": "Kimel",
+        "address": "Hashachar St 5, Kiryat Shmona",
+        "phone": "04-690-2000",
+        "website": "www.kimel-restaurant.co.il",
+        "opening_hours": {
+          "sunday": { "open": "12:00", "close": "22:00" },
+          "monday": { "open": "12:00", "close": "22:00" },
+          "tuesday": { "open": "12:00", "close": "22:00" },
+          "wednesday": { "open": "12:00", "close": "22:00" },
+          "thursday": { "open": "12:00", "close": "22:00" },
+          "friday": { "open": "11:00", "close": "14:00" },
+          "saturday": { "open": "19:00", "close": "22:00" }
+        },
+        "cuisine_type": "Galilean",
+        "is_kosher": true
+      }
+    ]
+}
+    

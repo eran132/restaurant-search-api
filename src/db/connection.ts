@@ -13,4 +13,5 @@ const config = {
 
 const pool = process.env.NODE_ENV === 'test' ? new Pool() : new Pool(config);
 
-export default pool;
+export { pool };  // Named export
+export default pool;  // Default export
