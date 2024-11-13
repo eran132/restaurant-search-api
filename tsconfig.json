@@ -9,11 +9,15 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
-    "typeRoots": ["./node_modules/@types", "./src/types"]
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types"
+    ],
+    "types": ["node", "express"]
   },
   "include": [
     "src/**/*",
-    "scripts/**/*"
+    "src/types/**/*.d.ts"
   ],
   "exclude": [
     "node_modules"

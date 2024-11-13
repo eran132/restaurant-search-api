@@ -1,9 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
+interface UserRequest extends Request {
+    user?: any;
+}
+
 export const authMiddleware = (
-    req: Request, 
-    res: Response, 
+    req: UserRequest,
+    res: Response,
     next: NextFunction
 ) => {
     const token = req.headers.authorization?.split(' ')[1];
