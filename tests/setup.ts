@@ -1,5 +1,4 @@
-// test/setup.ts
-import { AWS } from 'aws-sdk';
+import { AWS as _AWS } from 'aws-sdk';
 import { setup } from '@localstack/test-utils';
 
 beforeAll(async () => {

@@ -1,9 +1,10 @@
-declare module 'pg' {
-    interface QueryResult<T = any> {
-      rows: T[];
-    }
-    
-    export class Pool {
-      query: jest.Mock<Promise<QueryResult<any>>, any[]>;
-    }
+declare module 'pg-mock' {
+  interface QueryResult<T = Record<string, unknown>> {
+    rows: T[];
+    rowCount: number;
   }
+
+  interface Client {
+    query<T>(query: string, values: unknown[]): Promise<QueryResult<T>>;
+  }
+}
