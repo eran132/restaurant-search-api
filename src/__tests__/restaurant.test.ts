@@ -20,12 +20,10 @@ jest.setTimeout(30000);
 
 describe('Restaurant API', () => {
     let testPool: Pool;
-    let testAgent: request.SuperTest<request.Test>;
 
     beforeAll(async () => {
         await globalSetup();
         testPool = new Pool(testConfig);
-        testAgent = request(app);
 
         await testPool.query('DROP TABLE IF EXISTS restaurants');
         
@@ -46,14 +44,33 @@ describe('Restaurant API', () => {
     });
 
     afterAll(async () => {
-        await testPool.query('DROP TABLE IF EXISTS restaurants');
-        await testPool.end();
+        try {
+            // Close all connections first
+            await testPool.query('SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = $1', 
+                ['restaurants_test']);
+            
+            // Drop test tables
+            await testPool.query('DROP TABLE IF EXISTS restaurants');
+            
+            // End pool
+            await new Promise<void>((resolve) => {
+                testPool.end(() => {
+                    if (server) {
+                        server.close(() => resolve());
+                    } else {
+                        resolve();
+                    }
+                });
+            });
+        } catch (error) {
+            console.error('Test cleanup failed:', error);
+        }
         await globalTeardown();
     });
 
     describe('GET /api/restaurants/search', () => {
         it('should return filtered restaurants', async () => {
-            const response = await testAgent
+            const response = await request(app)
                 .get('/api/restaurants/search')
                 .query({ cuisine_type: 'Italian', isKosher: 'true' });
 
@@ -63,7 +80,7 @@ describe('Restaurant API', () => {
         });
 
         it('should handle pagination', async () => {
-            const response = await testAgent
+            const response = await request(app)
                 .get('/api/restaurants/search')
                 .query({ page: '1', limit: '1' });
 

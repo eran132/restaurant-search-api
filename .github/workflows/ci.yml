@@ -12,7 +12,7 @@ jobs:
         env:
           POSTGRES_USER: user
           POSTGRES_PASSWORD: password
-          POSTGRES_DB: restaurants
+          POSTGRES_DB: restaurants_test
         ports:
           - 5432:5432
         options: >-
@@ -35,9 +35,10 @@ jobs:
       - name: Run tests
         run: npm test
         env:
+          NODE_ENV: test
           DB_USER: user
           DB_HOST: localhost
-          DB_NAME: restaurants
+          DB_NAME: restaurants_test
           DB_PASSWORD: password
           DB_PORT: 5432
           JWT_SECRET: test-secret
