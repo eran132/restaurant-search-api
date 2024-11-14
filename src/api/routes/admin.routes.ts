@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import { Pool } from 'pg';
 import jwt from 'jsonwebtoken';
 import { authMiddleware } from '../middleware/auth.middleware';
 import { auditMiddleware } from '../middleware/audit.middleware';
@@ -21,6 +20,9 @@ interface AdminRequestBody {
     cuisine_type?: string;
     is_kosher?: boolean;
     address?: string;
+    phone?: string;
+    website?: string;
+    opening_hours?: Record<string, { open: string; close: string }>;
 }
 
 interface AdminRequest extends Request {
@@ -81,7 +83,9 @@ router.get('/restaurants', async (req: AdminRequest, res: Response) => {
         const total = parseInt(countResult.rows[0].count);
         
         const query = `
-            SELECT * FROM restaurants
+            SELECT id, name, address, phone, website, opening_hours, 
+                   cuisine_type, is_kosher, created_at, updated_at
+            FROM restaurants
             ORDER BY id ASC
             LIMIT $1 OFFSET $2
         `;
@@ -113,7 +117,9 @@ router.get('/restaurants/:id', async (req: AdminRequest, res: Response) => {
         const { id } = req.params;
         
         const query = `
-            SELECT * FROM restaurants
+            SELECT id, name, address, phone, website, opening_hours, 
+                   cuisine_type, is_kosher, created_at, updated_at
+            FROM restaurants
             WHERE id = $1
         `;
         
@@ -142,15 +148,24 @@ router.get('/restaurants/:id', async (req: AdminRequest, res: Response) => {
 // Create restaurant
 router.post('/restaurants', async (req: AdminRequest, res: Response) => {
     try {
-        const { name, cuisine_type, is_kosher, address } = req.body;
+        const { 
+            name, cuisine_type, is_kosher, address, 
+            phone, website, opening_hours 
+        } = req.body;
         
         const query = `
-            INSERT INTO restaurants (name, cuisine_type, is_kosher, address)
-            VALUES ($1, $2, $3, $4)
+            INSERT INTO restaurants (
+                name, cuisine_type, is_kosher, address, 
+                phone, website, opening_hours
+            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
             RETURNING *
         `;
         
-        const result = await pool.query(query, [name, cuisine_type, is_kosher, address]);
+        const result = await pool.query(query, [
+            name, cuisine_type, is_kosher, address,
+            phone, website, opening_hours ? JSON.stringify(opening_hours) : null
+        ]);
         
         res.status(201).json({
             success: true,
@@ -169,17 +184,25 @@ router.post('/restaurants', async (req: AdminRequest, res: Response) => {
 router.put('/restaurants/:id', async (req: AdminRequest, res: Response) => {
     try {
         const { id } = req.params;
-        const { name, cuisine_type, is_kosher, address } = req.body;
+        const { 
+            name, cuisine_type, is_kosher, address,
+            phone, website, opening_hours 
+        } = req.body;
         
         const query = `
             UPDATE restaurants
-            SET name = $1, cuisine_type = $2, is_kosher = $3, address = $4, 
+            SET name = $1, cuisine_type = $2, is_kosher = $3, address = $4,
+                phone = $5, website = $6, opening_hours = $7,
                 updated_at = CURRENT_TIMESTAMP
-            WHERE id = $5
+            WHERE id = $8
             RETURNING *
         `;
         
-        const result = await pool.query(query, [name, cuisine_type, is_kosher, address, id]);
+        const result = await pool.query(query, [
+            name, cuisine_type, is_kosher, address,
+            phone, website, opening_hours ? JSON.stringify(opening_hours) : null,
+            id
+        ]);
         
         if (result.rowCount === 0) {
             return res.status(404).json({
