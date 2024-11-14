@@ -20,13 +20,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-      
-      localstack:
-        image: localstack/localstack
-        env:
-          SERVICES: s3,dynamodb,cloudwatch
-        ports:
-          - 4566:4566
 
     steps:
       - uses: actions/checkout@v2
