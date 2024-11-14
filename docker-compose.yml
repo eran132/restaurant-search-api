@@ -9,18 +9,32 @@ services:
       - DEFAULT_REGION=us-east-1
       - AWS_DEFAULT_REGION=us-east-1
       - DEBUG=1
+    networks:
+      - app-network
 
   postgres:
     container_name: restaurants_db
-    image: postgres:14
+    image: postgres:15
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: restaurants
+      POSTGRES_USER: ${DB_USER:-user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+      POSTGRES_DB: ${DB_NAME:-restaurants}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-user}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
+    name: restaurant-search-api_postgres_data
+
+networks:
+  app-network:
+    driver: bridge

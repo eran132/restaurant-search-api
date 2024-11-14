@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { Pool, QueryResult } from 'pg';
+import { Pool } from 'pg';
 import jwt from 'jsonwebtoken';
 import { authMiddleware } from '../middleware/auth.middleware';
 import { auditMiddleware } from '../middleware/audit.middleware';
@@ -26,12 +26,7 @@ interface AdminRequestBody {
 interface AdminRequest extends Request {
     query: AdminQuery;
     body: AdminRequestBody;
-}
-
-interface AdminResponse {
-    success: boolean;
-    data: Record<string, unknown>;
-    message?: string;
+    params: Record<string, string>;
 }
 
 const router = express.Router();
@@ -75,14 +70,19 @@ router.post('/login', async (req: Request, res: Response) => {
 router.use(authMiddleware);
 router.use(auditMiddleware);
 
+// Get all restaurants with pagination
 router.get('/restaurants', async (req: AdminRequest, res: Response) => {
     try {
-        const { page = '1', limit = '10' } = req.query;
+        const { page = '1', limit = '50' } = req.query;
         const offset = (Number(page) - 1) * Number(limit);
+        
+        // Get total count
+        const countResult = await pool.query('SELECT COUNT(*) FROM restaurants');
+        const total = parseInt(countResult.rows[0].count);
         
         const query = `
             SELECT * FROM restaurants
-            ORDER BY created_at DESC
+            ORDER BY id ASC
             LIMIT $1 OFFSET $2
         `;
         
@@ -90,7 +90,13 @@ router.get('/restaurants', async (req: AdminRequest, res: Response) => {
         
         res.json({
             success: true,
-            data: result.rows
+            data: result.rows,
+            pagination: {
+                total,
+                page: Number(page),
+                limit: Number(limit),
+                pages: Math.ceil(total / Number(limit))
+            }
         });
     } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -101,6 +107,39 @@ router.get('/restaurants', async (req: AdminRequest, res: Response) => {
     }
 });
 
+// Get single restaurant
+router.get('/restaurants/:id', async (req: AdminRequest, res: Response) => {
+    try {
+        const { id } = req.params;
+        
+        const query = `
+            SELECT * FROM restaurants
+            WHERE id = $1
+        `;
+        
+        const result = await pool.query(query, [id]);
+        
+        if (result.rowCount === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Restaurant not found'
+            });
+        }
+        
+        res.json({
+            success: true,
+            data: result.rows[0]
+        });
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        res.status(500).json({
+            success: false,
+            message: errorMessage
+        });
+    }
+});
+
+// Create restaurant
 router.post('/restaurants', async (req: AdminRequest, res: Response) => {
     try {
         const { name, cuisine_type, is_kosher, address } = req.body;
@@ -126,6 +165,7 @@ router.post('/restaurants', async (req: AdminRequest, res: Response) => {
     }
 });
 
+// Update restaurant
 router.put('/restaurants/:id', async (req: AdminRequest, res: Response) => {
     try {
         const { id } = req.params;
@@ -133,7 +173,8 @@ router.put('/restaurants/:id', async (req: AdminRequest, res: Response) => {
         
         const query = `
             UPDATE restaurants
-            SET name = $1, cuisine_type = $2, is_kosher = $3, address = $4, updated_at = CURRENT_TIMESTAMP
+            SET name = $1, cuisine_type = $2, is_kosher = $3, address = $4, 
+                updated_at = CURRENT_TIMESTAMP
             WHERE id = $5
             RETURNING *
         `;
@@ -160,6 +201,7 @@ router.put('/restaurants/:id', async (req: AdminRequest, res: Response) => {
     }
 });
 
+// Delete restaurant
 router.delete('/restaurants/:id', async (req: AdminRequest, res: Response) => {
     try {
         const { id } = req.params;

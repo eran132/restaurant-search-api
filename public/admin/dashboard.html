@@ -2,94 +2,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Dashboard</title>
-    <style>
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .header { display: flex; justify-content: space-between; align-items: center; }
-        .content { margin-top: 20px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 10px; text-align: left; border: 1px solid #ddd; }
-        .actions { display: flex; gap: 10px; }
-        button { padding: 5px 10px; cursor: pointer; }
-    </style>
+    <title>Restaurant Management</title>
+    <link rel="stylesheet" href="/admin/styles.css">
 </head>
 <body>
     <div class="container">
-        <div class="header">
+        <header>
             <h2>Restaurant Management</h2>
             <button onclick="logout()">Logout</button>
+        </header>
+
+        <button onclick="showAddForm()" class="add-btn">Add Restaurant</button>
+
+        <div id="restaurantForm" class="modal" style="display:none;">
+            <div class="modal-content">
+                <h3>Add/Edit Restaurant</h3>
+                <form id="restaurantDataForm">
+                    <input type="hidden" id="restaurantId">
+                    <input type="text" id="name" placeholder="Name" required>
+                    <input type="text" id="address" placeholder="Address" required>
+                    <input type="text" id="cuisine_type" placeholder="Cuisine Type" required>
+                    <label>
+                        <input type="checkbox" id="is_kosher">
+                        Kosher
+                    </label>
+                    <div class="form-buttons">
+                        <button type="submit">Save</button>
+                        <button type="button" onclick="hideForm()">Cancel</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        
-        <div class="content">
-            <button onclick="showAddForm()">Add Restaurant</button>
-            <div id="restaurantList"></div>
-        </div>
+
+        <div id="restaurantList"></div>
     </div>
-
-    <script>
-        // Check authentication
-        if (!localStorage.getItem('adminToken')) {
-            window.location.href = '/admin/login.html';
-        }
-
-        async function loadRestaurants() {
-            try {
-                const response = await fetch('/admin/restaurants', {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
-                    }
-                });
-                
-                if (response.status === 401) {
-                    logout();
-                    return;
-                }
-
-                const data = await response.json();
-                if (data.success) {
-                    displayRestaurants(data.data);
-                }
-            } catch (error) {
-                console.error('Failed to load restaurants:', error);
-            }
-        }
-
-        function displayRestaurants(restaurants) {
-            const html = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Cuisine</th>
-                            <th>Kosher</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${restaurants.map(r => `
-                            <tr>
-                                <td>${r.name}</td>
-                                <td>${r.cuisine_type}</td>
-                                <td>${r.is_kosher ? 'Yes' : 'No'}</td>
-                                <td class="actions">
-                                    <button onclick="editRestaurant(${r.id})">Edit</button>
-                                    <button onclick="deleteRestaurant(${r.id})">Delete</button>
-                                </td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
-            document.getElementById('restaurantList').innerHTML = html;
-        }
-
-        function logout() {
-            localStorage.removeItem('adminToken');
-            window.location.href = '/admin/login.html';
-        }
-
-        // Load restaurants on page load
-        loadRestaurants();
-    </script>
+    <script src="/admin/app.js"></script>
 </body>
 </html>

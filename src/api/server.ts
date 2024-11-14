@@ -9,21 +9,46 @@ let server: Server | null = null;
 
 // Middleware
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../../public')));
+
+// Ensure public directory exists
+const publicPath = path.join(__dirname, '../../public');
+if (!require('fs').existsSync(publicPath)) {
+    console.warn('Public directory not found, creating...');
+    require('fs').mkdirSync(publicPath, { recursive: true });
+}
+
+// Static file serving with caching
+app.use(express.static(publicPath, {
+    maxAge: process.env.NODE_ENV === 'production' ? '1d' : 0
+}));
+
+// CORS headers
+app.use((_req: Request, res: Response, next: NextFunction) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+});
 
 // Security headers
 app.use((_req: Request, res: Response, next: NextFunction) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
     res.setHeader('X-XSS-Protection', '1; mode=block');
+    // Update CSP to allow inline scripts and styles
+    res.setHeader(
+        'Content-Security-Policy',
+        "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
+    );
     next();
 });
 
-// Request logging
+// Request logging with route info
 app.use((req: Request, _res: Response, next: NextFunction) => {
-    console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.path} ${req.ip}`);
     next();
 });
+
 
 // Root route with API documentation
 app.get('/', (_req: Request, res: Response) => {
