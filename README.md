@@ -8,3 +8,5 @@ Clone the repository:
 
 git clone https://github.com/eran132/restaurant-search-api.git
 cd restaurant-search-api
+
+npm run setup command runs the ./scripts/setup-dev.sh
