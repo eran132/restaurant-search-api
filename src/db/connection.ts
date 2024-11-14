@@ -30,9 +30,16 @@ export const testConfig: DatabaseConfig = {
 
 const pool = new Pool(process.env.NODE_ENV === 'test' ? testConfig : defaultConfig);
 
+// Add error handler to prevent process exit
 pool.on('error', (err) => {
     console.error('Unexpected error on idle client', err);
-    process.exit(-1);
+});
+
+// Add connection error handler
+pool.on('connect', (client) => {
+    client.on('error', (err) => {
+        console.error('Database client error:', err);
+    });
 });
 
 export { pool };
