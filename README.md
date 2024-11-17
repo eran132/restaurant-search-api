@@ -11,3 +11,7 @@ git clone https://github.com/eran132/restaurant-search-api.git
 cd restaurant-search-api
 
 npm run setup command runs the ./scripts/setup-dev.sh
+
+
+Login: http://localhost:3000/
+Admin password in .env file
