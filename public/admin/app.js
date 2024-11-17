@@ -49,7 +49,7 @@ function clearForm() {
 }
 
 // Dashboard functionality
-async function loadRestaurants(page = 1) {
+async function loadRestaurants(page = currentPage) {
     const token = localStorage.getItem('adminToken');
     if (!token) {
         window.location.href = '/admin/login.html';
@@ -59,7 +59,9 @@ async function loadRestaurants(page = 1) {
     try {
         const response = await fetch(`/admin/restaurants?page=${page}&limit=${ITEMS_PER_PAGE}`, {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache'
             }
         });
         
@@ -70,15 +72,15 @@ async function loadRestaurants(page = 1) {
 
         const data = await response.json();
         if (data.success) {
-            displayRestaurants(data.data);
-            updatePagination(data.pagination);
+            currentPage = page;
+            displayRestaurants(data.data, data.pagination);
         }
     } catch (error) {
         console.error('Failed to load restaurants:', error);
     }
 }
 
-function displayRestaurants(restaurants) {
+function displayRestaurants(restaurants, pagination) {
     const list = document.getElementById('restaurantList');
     if (!list) return;
 
@@ -88,6 +90,8 @@ function displayRestaurants(restaurants) {
                 <tr>
                     <th>Name</th>
                     <th>Address</th>
+                    <th>Website</th>
+                    <th>Opening Hours</th>
                     <th>Cuisine</th>
                     <th>Kosher</th>
                     <th>Actions</th>
@@ -98,6 +102,8 @@ function displayRestaurants(restaurants) {
                     <tr>
                         <td>${r.name}</td>
                         <td>${r.address}</td>
+                        <td>${r.website ? `<a href="${r.website}" target="_blank">${r.website}</a>` : '-'}</td>
+                        <td>${formatOpeningHours(r.opening_hours)}</td>
                         <td>${r.cuisine_type}</td>
                         <td>${r.is_kosher ? 'Yes' : 'No'}</td>
                         <td>
@@ -109,11 +115,31 @@ function displayRestaurants(restaurants) {
             </tbody>
         </table>
         <div class="pagination">
-            <button onclick="loadPage(currentPage - 1)" id="prevBtn">Previous</button>
-            <span id="pageInfo">Page ${currentPage}</span>
-            <button onclick="loadPage(currentPage + 1)" id="nextBtn">Next</button>
+            <button onclick="loadPage(${currentPage - 1})" ${currentPage <= 1 ? 'disabled' : ''}>Previous</button>
+            <span>Page ${currentPage} of ${pagination.pages} (Total: ${pagination.total})</span>
+            <button onclick="loadPage(${currentPage + 1})" ${currentPage >= pagination.pages ? 'disabled' : ''}>Next</button>
         </div>
     `;
+}
+
+function formatOpeningHours(hours) {
+    if (!hours) return '-';
+    try {
+        return Object.entries(hours)
+            .map(([day, times]) => 
+                `<div class="day-hours">
+                    <span class="day">${capitalizeDay(day)}:</span> 
+                    <span class="hours">${times.open}-${times.close}</span>
+                </div>`
+            )
+            .join('');
+    } catch (e) {
+        return '-';
+    }
+}
+
+function capitalizeDay(day) {
+    return day.charAt(0).toUpperCase() + day.slice(1);
 }
 
 function updatePagination(pagination) {
@@ -138,6 +164,7 @@ function loadPage(page) {
     loadRestaurants(page);
 }
 
+// public/admin/app.js
 async function editRestaurant(id) {
     const token = localStorage.getItem('adminToken');
     try {
@@ -150,11 +177,29 @@ async function editRestaurant(id) {
         const data = await response.json();
         if (data.success) {
             const restaurant = data.data;
+            
+            // Populate basic fields
             document.getElementById('restaurantId').value = restaurant.id;
             document.getElementById('name').value = restaurant.name;
             document.getElementById('address').value = restaurant.address;
+            document.getElementById('website').value = restaurant.website || '';
             document.getElementById('cuisine_type').value = restaurant.cuisine_type;
             document.getElementById('is_kosher').checked = restaurant.is_kosher;
+            
+            // Populate opening hours
+            if (restaurant.opening_hours) {
+                const hours = restaurant.opening_hours;
+                Object.keys(hours).forEach(day => {
+                    const openInput = document.querySelector(`input[data-day="${day}"][data-type="open"]`);
+                    const closeInput = document.querySelector(`input[data-day="${day}"][data-type="close"]`);
+                    if (openInput && closeInput) {
+                        openInput.value = hours[day].open;
+                        closeInput.value = hours[day].close;
+                    }
+                });
+            }
+            
+            // Show form
             document.getElementById('restaurantForm').style.display = 'block';
         }
     } catch (error) {
@@ -163,16 +208,37 @@ async function editRestaurant(id) {
     }
 }
 
+function getOpeningHours() {
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+    const hours = {};
+    
+    days.forEach(day => {
+        const open = document.querySelector(`input[data-day="${day}"][data-type="open"]`).value;
+        const close = document.querySelector(`input[data-day="${day}"][data-type="close"]`).value;
+        if (open && close) {
+            hours[day] = { open, close };
+        }
+    });
+    
+    return Object.keys(hours).length > 0 ? hours : null;
+}
+
+// public/admin/app.js
 async function saveRestaurant(event) {
     event.preventDefault();
     const token = localStorage.getItem('adminToken');
     const id = document.getElementById('restaurantId').value;
+    const form = document.getElementById('restaurantDataForm');
+    
+    form.classList.add('loading');
     
     const data = {
         name: document.getElementById('name').value,
         address: document.getElementById('address').value,
+        website: document.getElementById('website').value || null,
         cuisine_type: document.getElementById('cuisine_type').value,
-        is_kosher: document.getElementById('is_kosher').checked
+        is_kosher: document.getElementById('is_kosher').checked,
+        opening_hours: getOpeningHours()
     };
 
     try {
@@ -183,22 +249,47 @@ async function saveRestaurant(event) {
             method,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'Cache-Control': 'no-cache'
             },
             body: JSON.stringify(data)
         });
 
-        if (response.ok) {
+        const result = await response.json();
+        
+        if (response.ok && result.success) {
             hideForm();
-            loadRestaurants(currentPage); // Maintain current page
+            // Go to last page if adding new restaurant
+            if (!id && result.data.pagination) {
+                await loadRestaurants(result.data.pagination.pages);
+            } else {
+                await loadRestaurants(currentPage);
+            }
+            showMessage('Restaurant saved successfully!', 'success');
         } else {
-            const errorData = await response.json();
-            alert(errorData.message || 'Failed to save restaurant');
+            const errorMessage = result.message || 'Failed to save restaurant';
+            showMessage(errorMessage, 'error');
+            
+            if (response.status === 409) { // Conflict/Duplicate
+                showMessage('A restaurant with this name already exists', 'error');
+            }
         }
     } catch (error) {
         console.error('Failed to save restaurant:', error);
-        alert('Failed to save restaurant');
+        showMessage('Failed to save restaurant', 'error');
+    } finally {
+        form.classList.remove('loading');
     }
+}
+
+function showMessage(message, type = 'success') {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = type;
+    messageDiv.textContent = message;
+    document.querySelector('.container').insertBefore(messageDiv, document.getElementById('restaurantList'));
+    
+    // Remove message after 3 seconds
+    setTimeout(() => messageDiv.remove(), 3000);
 }
 
 async function deleteRestaurant(id) {

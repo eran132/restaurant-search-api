@@ -19,13 +19,82 @@
                 <h3>Add/Edit Restaurant</h3>
                 <form id="restaurantDataForm">
                     <input type="hidden" id="restaurantId">
-                    <input type="text" id="name" placeholder="Name" required>
-                    <input type="text" id="address" placeholder="Address" required>
-                    <input type="text" id="cuisine_type" placeholder="Cuisine Type" required>
-                    <label>
-                        <input type="checkbox" id="is_kosher">
-                        Kosher
-                    </label>
+                    
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address">Address:</label>
+                        <input type="text" id="address" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="website">Website:</label>
+                        <input type="url" id="website" placeholder="https://...">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cuisine_type">Cuisine Type:</label>
+                        <input type="text" id="cuisine_type" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Opening Hours:</label>
+                        <div class="opening-hours-form">
+                            <div class="day-input">
+                                <label>Monday:</label>
+                                <input type="time" class="time-input" data-day="monday" data-type="open">
+                                <span>-</span>
+                                <input type="time" class="time-input" data-day="monday" data-type="close">
+                            </div>
+                            <div class="day-input">
+                                <label>Tuesday:</label>
+                                <input type="time" class="time-input" data-day="tuesday" data-type="open">
+                                <span>-</span>
+                                <input type="time" class="time-input" data-day="tuesday" data-type="close">
+                            </div>
+                            <div class="day-input">
+                                <label>Wednesday:</label>
+                                <input type="time" class="time-input" data-day="wednesday" data-type="open">
+                                <span>-</span>
+                                <input type="time" class="time-input" data-day="wednesday" data-type="close">
+                            </div>
+                            <div class="day-input">
+                                <label>Thursday:</label>
+                                <input type="time" class="time-input" data-day="thursday" data-type="open">
+                                <span>-</span>
+                                <input type="time" class="time-input" data-day="thursday" data-type="close">
+                            </div>
+                            <div class="day-input">
+                                <label>Friday:</label>
+                                <input type="time" class="time-input" data-day="friday" data-type="open">
+                                <span>-</span>
+                                <input type="time" class="time-input" data-day="friday" data-type="close">
+                            </div>
+                            <div class="day-input">
+                                <label>Saturday:</label>
+                                <input type="time" class="time-input" data-day="saturday" data-type="open">
+                                <span>-</span>
+                                <input type="time" class="time-input" data-day="saturday" data-type="close">
+                            </div>
+                            <div class="day-input">
+                                <label>Sunday:</label>
+                                <input type="time" class="time-input" data-day="sunday" data-type="open">
+                                <span>-</span>
+                                <input type="time" class="time-input" data-day="sunday" data-type="close">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="is_kosher">
+                            Kosher
+                        </label>
+                    </div>
+
                     <div class="form-buttons">
                         <button type="submit">Save</button>
                         <button type="button" onclick="hideForm()">Cancel</button>
