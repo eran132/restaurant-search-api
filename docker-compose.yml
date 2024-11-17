@@ -21,3 +21,23 @@ services:
       SERVICES: s3,dynamodb,cloudwatch
     ports:
       - "4566:4566"
+
+  node_app:
+    image: node:16
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: sh -c "npm install && npm run setup"
+    depends_on:
+      restaurants_db:
+        condition: service_healthy
+      localstack:
+        condition: service_started
+    environment:
+      DB_USER: user
+      DB_HOST: restaurants_db
+      DB_NAME: restaurants
+      DB_PASSWORD: password
+      DB_PORT: 5432
+      JWT_SECRET: test-secret
+      ADMIN_PASSWORD: test-password
