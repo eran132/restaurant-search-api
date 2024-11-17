@@ -12,7 +12,7 @@ echo -e "Starting docker containers..."
 docker-compose up -d
 
 echo -e "Waiting for PostgreSQL to be ready..."
-until pg_isready -h localhost -p 5432; do
+until [ "$(docker inspect -f {{.State.Health.Status}} restaurant-search-api-restaurants_db-1)" == "healthy" ]; do
     echo -e "PostgreSQL is unavailable - sleeping"
     sleep 1
 done

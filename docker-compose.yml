@@ -1,48 +1,23 @@
-services:
-  localstack:
-    container_name: localstack_main
-    image: localstack/localstack:latest
-    ports:
-      - "4566:4566"
-    environment:
-      - SERVICES=s3,dynamodb,rds,cloudwatch,iam
-      - DEFAULT_REGION=us-east-1
-      - AWS_DEFAULT_REGION=us-east-1
-      - DEBUG=1
-    networks:
-      - app-network
+version: '3.8'
 
-  postgres:
-    container_name: restaurants_db
-    image: postgres:15
+services:
+  restaurants_db:
+    image: postgres:14
     environment:
-      POSTGRES_USER: ${DB_USER:-user}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
-      POSTGRES_DB: ${DB_NAME:-restaurants}
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: restaurants
     ports:
       - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-user}"]
-      interval: 5s
+      test: ["CMD-SHELL", "pg_isready -U user"]
+      interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - app-network
 
-  registry:
-    container_name: local_registry
-    image: registry:2
+  localstack:
+    image: localstack/localstack
+    environment:
+      SERVICES: s3,dynamodb,cloudwatch
     ports:
-      - "5001:5000"
-    networks:
-      - app-network
-
-volumes:
-  postgres_data:
-    name: restaurant-search-api_postgres_data
-
-networks:
-  app-network:
-    driver: bridge
+      - "4566:4566"
