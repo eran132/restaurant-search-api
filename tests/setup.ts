@@ -1,7 +1,6 @@
 // tests/setup.ts
 import { Pool } from 'pg';
 import { testConfig } from '../src/db/connection';
-import { jest } from '@jest/globals';
 
 let pool: Pool;
 

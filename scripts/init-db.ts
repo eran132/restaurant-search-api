@@ -10,6 +10,7 @@ async function createDatabase(isTest = false) {
     const config = isTest ? testConfig : defaultConfig;
     const pool = new Pool({
         ...config,
+        host: config.host, // Use the host from the config
         database: 'postgres'
     });
 
@@ -34,7 +35,6 @@ async function createDatabase(isTest = false) {
     }
 }
 
-// Update loadSeedData function in init-db.ts
 async function loadSeedData() {
     const seedPath = path.join(__dirname, 'restaurants.json');
     console.log('Looking for seed file at:', seedPath);
@@ -48,11 +48,9 @@ async function loadSeedData() {
         const fileContent = fs.readFileSync(seedPath, 'utf-8');
         console.log('File content length:', fileContent.length);
         
-        // Try to parse the content
-        let data;
+        let data: { restaurants: any[] };
         try {
             const jsonData = JSON.parse(fileContent);
-            // Extract restaurants array from wrapper object
             data = jsonData.restaurants;
             
             if (!Array.isArray(data)) {
@@ -67,12 +65,10 @@ async function loadSeedData() {
             return null;
         }
 
-        // Validate data
         if (data.length > 0) {
             console.log(`Loaded ${data.length} restaurants from seed file`);
             console.log('First restaurant:', JSON.stringify(data[0], null, 2));
             
-            // Basic schema validation
             const firstItem = data[0];
             const requiredFields = ['name', 'address', 'cuisine_type', 'is_kosher'];
             const missingFields = requiredFields.filter(field => !(field in firstItem));
