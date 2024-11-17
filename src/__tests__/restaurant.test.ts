@@ -20,13 +20,14 @@ describe('Restaurant API', () => {
                     name TEXT NOT NULL,
                     address TEXT NOT NULL,
                     cuisine_type VARCHAR(100),
-                    is_kosher BOOLEAN DEFAULT false
+                    is_kosher BOOLEAN DEFAULT false,
+                    opening_hours JSONB
                 );
 
-                INSERT INTO restaurants (name, address, cuisine_type, is_kosher)
+                INSERT INTO restaurants (name, address, cuisine_type, is_kosher, opening_hours)
                 VALUES 
-                    ('Kosher Italian', 'Test Address 2', 'Italian', true),
-                    ('Test Italian', 'Test Address 1', 'Italian', false);
+                    ('Kosher Italian', 'Test Address 2', 'Italian', true, '{"monday": {"open": "09:00", "close": "17:00"}}'),
+                    ('Test Italian', 'Test Address 1', 'Italian', false, '{"monday": {"open": "09:00", "close": "17:00"}}');
             `);
         } catch (error) {
             console.error('Test setup failed:', error);
@@ -62,8 +63,8 @@ describe('Restaurant API', () => {
                 .query({ cuisine_type: 'Italian', isKosher: 'true' });
 
             expect(response.status).toBe(200);
-            expect(Array.isArray(response.body)).toBe(true);
-            expect(response.body[0].name).toBe('Kosher Italian');
+            expect(Array.isArray(response.body.data)).toBe(true);
+            expect(response.body.data[0].name).toBe('Kosher Italian');
         });
 
         it('should handle pagination', async () => {
@@ -72,8 +73,68 @@ describe('Restaurant API', () => {
                 .query({ page: '1', limit: '1' });
 
             expect(response.status).toBe(200);
-            expect(Array.isArray(response.body)).toBe(true);
-            expect(response.body).toHaveLength(1);
+            expect(Array.isArray(response.body.data)).toBe(true);
+            expect(response.body.data).toHaveLength(1);
+        });
+
+        it('should return filtered restaurants by cuisine', async () => {
+            const response = await request(app)
+                .get('/api/restaurants/search')
+                .query({ cuisine_type: 'Italian' });
+
+            expect(response.status).toBe(200);
+            expect(Array.isArray(response.body.data)).toBe(true);
+            expect(response.body.data[0].cuisine_type).toBe('Italian');
+        });
+
+        it('should return filtered restaurants by kosher', async () => {
+            const response = await request(app)
+                .get('/api/restaurants/search')
+                .query({ isKosher: 'true' });
+
+            expect(response.status).toBe(200);
+            expect(Array.isArray(response.body.data)).toBe(true);
+            expect(response.body.data[0].is_kosher).toBe(true);
+        });
+
+        it('should return currently open restaurants', async () => {
+            const response = await request(app)
+                .get('/api/restaurants/search')
+                .query({ currentlyOpen: 'true' });
+
+            expect(response.status).toBe(200);
+            expect(Array.isArray(response.body.data)).toBe(true);
+            // Additional checks for opening hours can be added here
+        });
+
+        it('should return restaurants by name', async () => {
+            const response = await request(app)
+                .get('/api/restaurants/search')
+                .query({ name: 'Kosher Italian' });
+
+            expect(response.status).toBe(200);
+            expect(Array.isArray(response.body.data)).toBe(true);
+            expect(response.body.data[0].name).toBe('Kosher Italian');
+        });
+
+        it('should return restaurants by address', async () => {
+            const response = await request(app)
+                .get('/api/restaurants/search')
+                .query({ address: 'Test Address 2' });
+
+            expect(response.status).toBe(200);
+            expect(Array.isArray(response.body.data)).toBe(true);
+            expect(response.body.data[0].address).toBe('Test Address 2');
+        });
+
+        it('should return an empty array if no restaurants match the criteria', async () => {
+            const response = await request(app)
+                .get('/api/restaurants/search')
+                .query({ name: 'Nonexistent Restaurant' });
+
+            expect(response.status).toBe(200);
+            expect(Array.isArray(response.body.data)).toBe(true);
+            expect(response.body.data).toHaveLength(0);
         });
     });
 });

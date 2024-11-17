@@ -1,14 +1,18 @@
 import express, { Request, Response, NextFunction } from 'express';
+import dotenv from 'dotenv';
 import path from 'path';
 import restaurantRouter from './routes/restaurant.routes';
 import adminRouter from './routes/admin.routes';
 import { Server } from 'http';
+
+dotenv.config();
 
 const app = express();
 let server: Server | null = null;
 
 // Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Ensure public directory exists
 const publicPath = path.join(__dirname, '../../public');
@@ -49,7 +53,6 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
     next();
 });
 
-
 // Root route with API documentation
 app.get('/', (_req: Request, res: Response) => {
     res.json({
@@ -86,9 +89,9 @@ app.use('/api/restaurants', restaurantRouter);
 app.use('/admin', adminRouter);
 
 // Error handling middleware
-app.use((err: Error, _req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     console.error(err.stack);
-    res.status(500).json({ 
+    res.status(500).json({
         error: 'Internal Server Error',
         message: process.env.NODE_ENV === 'development' ? err.message : undefined
     });

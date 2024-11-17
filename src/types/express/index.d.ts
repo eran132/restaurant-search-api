@@ -5,6 +5,13 @@ declare global {
         // Extend Request interface
         interface Request {
             user?: JWTPayload;
+            query: {
+                page?: string;
+                limit?: string;
+                cuisine_type?: string;
+                isKosher?: string;
+                search?: string;
+            };
         }
 
         // Add custom response interface
@@ -24,15 +31,6 @@ declare global {
             success: boolean;
             data?: T;
             message?: string;
-        }
-
-        // Add custom query parameters interface
-        interface Query {
-            page?: string;
-            limit?: string;
-            cuisine_type?: string;
-            isKosher?: string;
-            search?: string;
         }
 
         // Add custom params interface
