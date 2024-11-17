@@ -20,9 +20,6 @@ done
 echo -e "PostgreSQL is ready!"
 
 echo -e "Initializing database..."
-if ! npx ts-node scripts/init-db.ts; then
-    echo -e "Failed to initialize database. Please check the logs above."
-    exit 1
-fi
+docker-compose run node_app npx ts-node scripts/init-db.ts
 
 echo -e "Development environment setup complete!"

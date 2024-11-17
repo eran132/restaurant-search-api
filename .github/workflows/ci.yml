@@ -1,3 +1,7 @@
+name: CI
+
+on: [push, pull_request]
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -16,33 +20,19 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-      
-      localstack:
-        image: localstack/localstack
-        env:
-          SERVICES: s3,dynamodb,cloudwatch
-        ports:
-          - 4566:4566
 
     steps:
       - uses: actions/checkout@v2
       
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-          
-      - name: Install dependencies
-        run: npm install
-
-      - name: Check PostgreSQL health
-        run: docker exec ${{ job.services.postgres.id }} pg_isready
+      - name: Set up Docker Compose
+        run: docker-compose up -d
       
       - name: Run tests
-        run: npm test
+        run: docker-compose run node_app npm test
         env:
+          NODE_ENV: test
           DB_USER: user
-          DB_HOST: localhost
+          DB_HOST: restaurants_db
           DB_NAME: restaurants
           DB_PASSWORD: password
           DB_PORT: 5432
