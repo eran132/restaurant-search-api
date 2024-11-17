@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { Pool, QueryResult } from 'pg';
+import { QueryResult } from 'pg';
 import { auditMiddleware } from '../middleware/audit.middleware';
 import pool from '../../db/connection';
 import { ParsedQs } from 'qs';
