@@ -1,0 +1,21 @@
+replicaCount: 1
+
+image:
+  repository: my-docker-username/localstack
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 3000
+
+env:
+  DB_USER: postgres
+  DB_HOST: postgres
+  DB_NAME: restaurants
+  DB_PASSWORD: postgres
+  DB_PORT: 5432
+  JWT_SECRET: your-secret-key-here
+  ADMIN_PASSWORD: your-admin-password
+  LOCALSTACK_HOST: localstack
+  LOCALSTACK_PORT: 4566

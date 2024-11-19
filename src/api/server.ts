@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
+import { pool } from '../db/connection';
 import restaurantRouter from './routes/restaurant.routes';
 import adminRouter from './routes/admin.routes';
 import { Server } from 'http';

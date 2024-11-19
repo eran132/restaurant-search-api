@@ -15,8 +15,6 @@ const router = Router();
 
 router.get('/search', async (req: Request, res: Response) => {
     try {
-        const { page, limit, cuisine_type, isKosher, currentlyOpen } = req.query as RestaurantQuery;
-
         // Your query logic here
         const result: QueryResult = await pool.query('SELECT * FROM restaurants WHERE ...');
 

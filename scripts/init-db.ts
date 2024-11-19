@@ -9,9 +9,11 @@ dotenv.config();
 async function createDatabase(isTest = false) {
     const config = isTest ? testConfig : defaultConfig;
     const pool = new Pool({
-        ...config,
+        user: config.user,
         host: config.host, // Use the host from the config
-        database: 'postgres'
+        database: 'postgres', // Connect to the default 'postgres' database to create the new database
+        password: config.password,
+        port: config.port,
     });
 
     try {
@@ -48,7 +50,7 @@ async function loadSeedData() {
         const fileContent = fs.readFileSync(seedPath, 'utf-8');
         console.log('File content length:', fileContent.length);
         
-        let data: { restaurants: any[] };
+        let data: { restaurants: { name: string; address: string; phone?: string; website?: string; opening_hours: any; cuisine_type: string; is_kosher: boolean; }[] };
         try {
             const jsonData = JSON.parse(fileContent);
             data = jsonData.restaurants;

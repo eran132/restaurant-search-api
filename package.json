@@ -13,7 +13,8 @@
     "test:coverage": "NODE_ENV=test jest --coverage",
     "build": "tsc",
     "lint": "eslint . --ext .ts",
-    "reset": "./scripts/reset.sh"
+    "reset": "./scripts/reset.sh",
+    "migrate": "ts-node scripts/init-db.ts"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
