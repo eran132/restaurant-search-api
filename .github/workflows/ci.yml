@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - OnlyLocalStack  # Add your branch name here
 
 jobs:
   build:
