@@ -25,13 +25,13 @@ jobs:
         run: npm test
 
       - name: Build Docker image
-        run: docker build -t my-app .
+        run: docker build -t my-docker-username/restaurant-api:latest .
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Push Docker image
-        run: |
-          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-          docker tag my-app:latest ${{ secrets.DOCKER_USERNAME }}/my-app:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+        run: docker push my-docker-username/restaurant-api:latest
 
   deploy:
     runs-on: ubuntu-latest
@@ -66,3 +66,7 @@ jobs:
       - name: Apply Terraform
         run: terraform apply -auto-approve
         working-directory: terraform
+
+      - name: Deploy to LocalStack
+        run: |
+          aws --endpoint-url=http://localhost:4566 lambda update-function-code --function-name restaurant-search --image-uri my-docker-username/restaurant-api:latest

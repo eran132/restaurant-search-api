@@ -1,4 +1,3 @@
-// public/admin/app.js
 let currentPage = 1;
 const ITEMS_PER_PAGE = 50;
 
@@ -37,7 +36,6 @@ function showAddForm() {
 
 function hideForm() {
     document.getElementById('restaurantForm').style.display = 'none';
-    clearForm();
 }
 
 function clearForm() {
@@ -55,7 +53,6 @@ async function loadRestaurants(page = currentPage) {
         window.location.href = '/admin/login.html';
         return;
     }
-
     try {
         const response = await fetch(`/admin/restaurants?page=${page}&limit=${ITEMS_PER_PAGE}`, {
             headers: {
@@ -69,7 +66,6 @@ async function loadRestaurants(page = currentPage) {
             logout();
             return;
         }
-
         const data = await response.json();
         if (data.success) {
             currentPage = page;
@@ -83,7 +79,6 @@ async function loadRestaurants(page = currentPage) {
 function displayRestaurants(restaurants, pagination) {
     const list = document.getElementById('restaurantList');
     if (!list) return;
-
     list.innerHTML = `
         <table>
             <thead>
@@ -164,7 +159,7 @@ function loadPage(page) {
     loadRestaurants(page);
 }
 
-// public/admin/app.js
+// Edit restaurant
 async function editRestaurant(id) {
     const token = localStorage.getItem('adminToken');
     try {
@@ -223,7 +218,7 @@ function getOpeningHours() {
     return Object.keys(hours).length > 0 ? hours : null;
 }
 
-// public/admin/app.js
+// Save restaurant
 async function saveRestaurant(event) {
     event.preventDefault();
     const token = localStorage.getItem('adminToken');
@@ -240,7 +235,6 @@ async function saveRestaurant(event) {
         is_kosher: document.getElementById('is_kosher').checked,
         opening_hours: getOpeningHours()
     };
-
     try {
         const url = id ? `/admin/restaurants/${id}` : '/admin/restaurants';
         const method = id ? 'PUT' : 'POST';
@@ -254,7 +248,6 @@ async function saveRestaurant(event) {
             },
             body: JSON.stringify(data)
         });
-
         const result = await response.json();
         
         if (response.ok && result.success) {
@@ -292,9 +285,9 @@ function showMessage(message, type = 'success') {
     setTimeout(() => messageDiv.remove(), 3000);
 }
 
+// Delete restaurant
 async function deleteRestaurant(id) {
     if (!confirm('Are you sure you want to delete this restaurant?')) return;
-
     const token = localStorage.getItem('adminToken');
     try {
         const response = await fetch(`/admin/restaurants/${id}`, {
@@ -303,7 +296,6 @@ async function deleteRestaurant(id) {
                 'Authorization': `Bearer ${token}`
             }
         });
-
         if (response.ok) {
             // Reload current page after deletion
             loadRestaurants(currentPage);

@@ -14,7 +14,8 @@
     "build": "tsc",
     "lint": "eslint . --ext .ts",
     "reset": "./scripts/reset.sh",
-    "migrate": "ts-node scripts/init-db.ts"
+    "migrate": "ts-node scripts/init-db.ts",
+    "package-lambda": "zip -r terraform/lambda.zip ."
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

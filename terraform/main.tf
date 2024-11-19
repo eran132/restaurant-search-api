@@ -1,317 +1,235 @@
 terraform {
   required_providers {
-    helm = {
-      source  = "hashicorp/helm"
-      version = "~> 2.0"
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
     }
-    kubernetes = {
-      source  = "hashicorp/kubernetes"
+    docker = {
+      source  = "kreuzwerker/docker"
       version = "~> 2.0"
     }
     local = {
       source  = "hashicorp/local"
       version = "~> 2.0"
     }
+    null = {
+      source  = "hashicorp/null"
+      version = "~> 3.0"
+    }
+    time = {
+      source  = "hashicorp/time"
+      version = "~> 0.9.0"
+    }
   }
 }
 
-provider "local" {}
-
-provider "kubernetes" {
-  config_path = "~/.kube/config"
-}
-
-provider "helm" {
-  kubernetes {
-    config_path = "~/.kube/config"
+provider "aws" {
+  region                      = "us-east-1"
+  access_key                  = var.aws_access_key
+  secret_key                  = var.aws_secret_key
+  skip_credentials_validation = true
+  skip_metadata_api_check     = true
+  s3_force_path_style         = true
+  skip_requesting_account_id  = true
+  endpoints {
+    dynamodb = "http://localhost:4566"
+    s3       = "http://localhost:4566"
+    lambda   = "http://localhost:4566"
+    iam      = "http://localhost:4566"
   }
 }
 
-resource "null_resource" "create_helm_charts" {
+provider "docker" {}
+
+resource "docker_image" "localstack" {
+  name = "localstack/localstack:latest"
+}
+
+resource "null_resource" "remove_existing_localstack" {
   provisioner "local-exec" {
-    command = <<EOT
-      #!/bin/bash
-      cd /Users/eran/Documents/fullpath/restaurant-search-api
-
-      # Set the base directory for Helm charts
-      BASE_DIR="helm-charts"
-
-      # Create the base directory for Helm charts
-      mkdir -p $BASE_DIR
-
-      # Function to create a Helm chart
-      create_helm_chart() {
-        local chart_name=$1
-
-        mkdir -p $BASE_DIR/$chart_name/templates
-
-        # Create Chart.yaml
-        cat <<EOF > $BASE_DIR/$chart_name/Chart.yaml
-apiVersion: v2
-name: $chart_name
-description: A Helm chart for Kubernetes
-version: 0.1.0
-appVersion: "1.0"
-EOF
-
-        # Create values.yaml
-        cat <<EOF > $BASE_DIR/$chart_name/values.yaml
-replicaCount: 1
-
-image:
-  repository: my-docker-username/$chart_name
-  tag: latest
-  pullPolicy: IfNotPresent
-
-service:
-  type: ClusterIP
-  port: 3000
-
-env:
-  DB_USER: postgres
-  DB_HOST: postgres
-  DB_NAME: restaurants
-  DB_PASSWORD: postgres
-  DB_PORT: 5432
-  JWT_SECRET: your-secret-key-here
-  ADMIN_PASSWORD: your-admin-password
-  LOCALSTACK_HOST: localstack
-  LOCALSTACK_PORT: 4566
-EOF
-
-        # Create deployment.yaml
-        cat <<EOF > $BASE_DIR/$chart_name/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: $chart_name
-spec:
-  replicas: {{ .Values.replicaCount }}
-  selector:
-    matchLabels:
-      app: $chart_name
-  template:
-    metadata:
-      labels:
-        app: $chart_name
-    spec:
-      containers:
-        - name: $chart_name
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          env:
-            - name: DB_USER
-              value: {{ .Values.env.DB_USER }}
-            - name: DB_HOST
-              value: {{ .Values.env.DB_HOST }}
-            - name: DB_NAME
-              value: {{ .Values.env.DB_NAME }}
-            - name: DB_PASSWORD
-              value: {{ .Values.env.DB_PASSWORD }}
-            - name: DB_PORT
-              value: {{ .Values.env.DB_PORT }}
-            - name: JWT_SECRET
-              value: {{ .Values.env.JWT_SECRET }}
-            - name: ADMIN_PASSWORD
-              value: {{ .Values.env.ADMIN_PASSWORD }}
-            - name: LOCALSTACK_HOST
-              value: {{ .Values.env.LOCALSTACK_HOST }}
-            - name: LOCALSTACK_PORT
-              value: {{ .Values.env.LOCALSTACK_PORT }}
-          ports:
-            - containerPort: 3000
-EOF
-
-        # Create service.yaml
-        cat <<EOF > $BASE_DIR/$chart_name/templates/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: $chart_name
-spec:
-  type: {{ .Values.service.type }}
-  ports:
-    - port: {{ .Values.service.port }}
-      targetPort: 3000
-  selector:
-    app: $chart_name
-EOF
-      }
-
-      # Create Helm charts for express-app, localstack, and postgres
-      create_helm_chart "express-app"
-      create_helm_chart "localstack"
-      create_helm_chart "postgres"
-
-      # Customize the postgres values.yaml
-      cat <<EOF > $BASE_DIR/postgres/values.yaml
-replicaCount: 1
-
-image:
-  repository: postgres
-  tag: "14"
-  pullPolicy: IfNotPresent
-
-service:
-  type: ClusterIP
-  port: 5432
-
-env:
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: postgres
-  POSTGRES_DB: restaurants
-EOF
-
-      # Customize the postgres deployment.yaml
-      cat <<EOF > $BASE_DIR/postgres/templates/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: postgres
-spec:
-  replicas: {{ .Values.replicaCount }}
-  selector:
-    matchLabels:
-      app: postgres
-  template:
-    metadata:
-      labels:
-        app: postgres
-    spec:
-      containers:
-        - name: postgres
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          env:
-            - name: POSTGRES_USER
-              value: {{ .Values.env.POSTGRES_USER }}
-            - name: POSTGRES_PASSWORD
-              value: {{ .Values.env.POSTGRES_PASSWORD }}
-            - name: POSTGRES_DB
-              value: {{ .Values.env.POSTGRES_DB }}
-          ports:
-            - containerPort: 5432
-          volumeMounts:
-            - name: postgres-storage
-              mountPath: /var/lib/postgresql/data
-      volumes:
-        - name: postgres-storage
-          persistentVolumeClaim:
-            claimName: postgres-pvc
-EOF
-
-      # Customize the postgres service.yaml
-      cat <<EOF > $BASE_DIR/postgres/templates/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres
-spec:
-  type: {{ .Values.service.type }}
-  ports:
-    - port: {{ .Values.service.port }}
-      targetPort: 5432
-  selector:
-    app: postgres
-EOF
-
-      echo "Helm charts created successfully in $BASE_DIR."
-    EOT
+    command = "docker ps -a --filter name=localstack --format '{{.Names}}' | grep -w localstack | xargs -r docker rm -f"
   }
 }
 
-resource "null_resource" "fix_minikube_permissions" {
-  provisioner "local-exec" {
-    command = "sudo chown -R $USER $HOME/.minikube; chmod -R u+wrx $HOME/.minikube"
-  }
-}
-
-resource "null_resource" "install_minikube" {
-  depends_on = [null_resource.create_helm_charts, null_resource.fix_minikube_permissions]
-
-  provisioner "local-exec" {
-    command = <<EOT
-      arch=$(uname -m)
-      case $arch in
-        arm64)
-          echo "Downloading and installing Minikube for arm64 architecture..."
-          curl -LO https://github.com/kubernetes/minikube/releases/download/v1.34.0/minikube-darwin-arm64
-          sudo install minikube-darwin-arm64 /usr/local/bin/minikube
-          ;;
-        x86_64)
-          echo "Downloading and installing Minikube for amd64 architecture..."
-          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-darwin-amd64
-          sudo install minikube-darwin-amd64 /usr/local/bin/minikube
-          ;;
-        *)
-          echo "Unsupported architecture: $arch"
-          exit 1
-          ;;
-      esac
-      if [ -f /usr/local/bin/minikube ]; then
-        echo "Minikube installed successfully."
-        minikube version
-      else
-        echo "Minikube installation failed."
-        exit 1
-      fi
-    EOT
-  }
-}
-
-resource "null_resource" "start_minikube" {
-  depends_on = [null_resource.install_minikube]
-
-  provisioner "local-exec" {
-    command = <<EOT
-      minikube start --driver=docker
-      sleep 30  # Add a delay to ensure the Kubernetes API server is ready
-    EOT
-  }
-}
-
-resource "null_resource" "setup_kubeconfig" {
-  depends_on = [null_resource.start_minikube]
-
-  provisioner "local-exec" {
-    command = <<EOT
-      minikube update-context
-      mkdir -p $HOME/.kube
-      minikube kubectl -- config view --raw > $HOME/.kube/config
-      export KUBECONFIG=$HOME/.kube/config
-    EOT
-  }
-}
-
-resource "helm_release" "express_app" {
-  depends_on = [null_resource.setup_kubeconfig]
-
-  name       = "express-app"
-  chart      = "../helm-charts/express-app"
-  namespace  = "example"
-  values     = [
-    file("../helm-charts/express-app/values.yaml")
-  ]
-}
-
-resource "helm_release" "localstack" {
-  depends_on = [null_resource.setup_kubeconfig]
-
+resource "docker_container" "localstack" {
+  depends_on = [null_resource.remove_existing_localstack]
+  image      = docker_image.localstack.name
   name       = "localstack"
-  chart      = "../helm-charts/localstack"
-  namespace  = "example"
-  values     = [
-    file("../helm-charts/localstack/values.yaml")
+  ports {
+    internal = 4566
+    external = 4566
+  }
+  ports {
+    internal = 4571
+    external = 4571
+  }
+  env = [
+    "SERVICES=s3,dynamodb,cloudwatch,logs,lambda,iam",
+    "DEBUG=1",
+    "DATA_DIR=/var/lib/localstack",
+    "LAMBDA_EXECUTOR=docker",
+    "LAMBDA_REMOTE_DOCKER=false",
+    "DOCKER_HOST=unix:///var/run/docker.sock"
   ]
+  volumes {
+    host_path      = abspath("${path.module}/../localstack")
+    container_path = "/var/lib/localstack"
+  }
+  volumes {
+    host_path      = "/var/run/docker.sock"
+    container_path = "/var/run/docker.sock"
+  }
 }
 
-resource "helm_release" "postgres" {
-  depends_on = [null_resource.setup_kubeconfig]
+resource "aws_s3_bucket" "restaurant_data" {
+  bucket = "restaurant-data"
+}
 
-  name       = "postgres"
-  chart      = "../helm-charts/postgres"
-  namespace  = "example"
-  values     = [
-    file("../helm-charts/postgres/values.yaml")
-  ]
+resource "aws_s3_bucket_object" "restaurants_json" {
+  depends_on = [aws_s3_bucket.restaurant_data]
+  bucket     = aws_s3_bucket.restaurant_data.bucket
+  key        = "restaurants.json"
+  source     = "${path.module}/../restaurants.json"
+}
+
+resource "aws_dynamodb_table" "restaurants" {
+  name           = "Restaurants"
+  billing_mode   = "PAY_PER_REQUEST"
+  hash_key       = "RestaurantID"
+
+  attribute {
+    name = "RestaurantID"
+    type = "S"
+  }
+
+  lifecycle {
+    ignore_changes = [name]
+  }
+}
+
+resource "aws_dynamodb_table" "audit_logs" {
+  name           = "AuditLogs"
+  billing_mode   = "PAY_PER_REQUEST"
+  hash_key       = "LogID"
+
+  attribute {
+    name = "LogID"
+    type = "S"
+  }
+
+  lifecycle {
+    ignore_changes = [name]
+  }
+}
+
+resource "aws_iam_role" "lambda_role" {
+  name = "lambda-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "null_resource" "package_lambda" {
+  triggers = {
+    source_code = filesha256("${path.module}/../src/api/server.ts")
+  }
+
+  provisioner "local-exec" {
+    command = <<EOT
+      cd ${path.module}/..
+      npm install
+      zip -r lambda.zip node_modules src package.json
+    EOT
+  }
+}
+
+resource "aws_lambda_function" "restaurant_search" {
+  depends_on     = [null_resource.package_lambda, null_resource.wait_for_localstack]
+  filename       = "${path.module}/../lambda.zip"
+  function_name  = "restaurant-search"
+  role           = aws_iam_role.lambda_role.arn
+  handler        = "src/api/server.handler"
+  runtime        = "nodejs16.x"
+  source_code_hash = filebase64sha256("${path.module}/../lambda.zip")
+  environment {
+    variables = {
+      NODE_ENV = "production"
+      DYNAMODB_ENDPOINT = "http://localhost:4566"
+      REGION = "us-east-1"
+    }
+  }
+}
+
+resource "null_resource" "wait_for_localstack" {
+  depends_on = [docker_container.localstack]
+
+  provisioner "local-exec" {
+    command = <<EOT
+      echo "Waiting for LocalStack to be ready..."
+      for i in {1..30}; do
+        if curl -s http://localhost:4566/_localstack/health | grep -q "\"running\""; then
+          echo "LocalStack is ready"
+          exit 0
+        fi
+        echo "Waiting... ($i/30)"
+        sleep 5
+      done
+      echo "LocalStack failed to start"
+      exit 1
+    EOT
+  }
+}
+
+resource "null_resource" "setup_localstack" {
+  depends_on = [null_resource.wait_for_localstack, aws_lambda_function.restaurant_search]
+
+  provisioner "local-exec" {
+    command = <<EOT
+      # Create S3 bucket and upload data
+      aws --endpoint-url=http://localhost:4566 s3 mb s3://restaurant-data || true
+      aws --endpoint-url=http://localhost:4566 s3 cp ${path.module}/../restaurants.json s3://restaurant-data/ || true
+
+      # Create DynamoDB tables (only if they don't exist)
+      aws --endpoint-url=http://localhost:4566 dynamodb create-table \
+        --table-name Restaurants \
+        --attribute-definitions AttributeName=RestaurantID,AttributeType=S \
+        --key-schema AttributeName=RestaurantID,KeyType=HASH \
+        --billing-mode PAY PER REQUEST || true
+
+      aws --endpoint-url=http://localhost:4566 dynamodb create-table \
+        --table-name AuditLogs \
+        --attribute-definitions AttributeName=LogID,AttributeType=S \
+        --key-schema AttributeName=LogID,KeyType=HASH \
+        --billing-mode PAY PER REQUEST || true
+
+      # Test Lambda function
+      echo "Testing Lambda function..."
+      aws --endpoint-url=http://localhost:4566 lambda invoke \
+        --function-name restaurant-search \
+        --payload '{"httpMethod": "GET", "path": "/restaurants"}' \
+        response.json || true
+    EOT
+  }
+}
+
+output "localstack_status" {
+  value = "LocalStack is running at http://localhost:4566"
+}
+
+output "lambda_function_name" {
+  value = aws_lambda_function.restaurant_search.function_name
 }
